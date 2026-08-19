@@ -32,7 +32,7 @@ Duas restrições de plataforma moldam a solução:
 
    Bruno propôs a estrutura deixando o nome do segundo arquivo em aberto entre `webhook.worker.ts` e `webhook.processor.ts` (ABE-02, `[09:28]`); a escolha por `webhook.worker.ts` foi feita fora da reunião, na sessão de fechamento dos ADRs. **A proximidade dos nomes é conhecida e aceita** — `src/worker.ts` orquestra o processo, `webhook.worker.ts` contém a regra.
 
-3. **Polling em loop, intervalo de 2 segundos** (DEC-02 / TEC-03, `[09:09]`–`[09:10]`): "A cada 2 segundos, busca os eventos pendentes mais antigos, processa, marca." A latência mínima de 2 segundos no pior caso foi explicitamente aceita por Larissa.
+3. **Polling em loop, intervalo de 2 segundos** — proposto por Diego (TEC-03, `[09:09]`): "A cada 2 segundos, busca os eventos pendentes mais antigos, processa, marca."; fechado por Larissa (DEC-02, `[09:10]`), que aceitou explicitamente a latência mínima de 2 segundos no pior caso.
 
 4. **Leitura em batch pequeno, ordenada por `created_at`** (TEC-02, Diego `[09:08]`): "Worker lê só os pendentes em batch pequeno, processa, marca como entregue."
 
@@ -71,7 +71,7 @@ Duas restrições de plataforma moldam a solução:
 
 ## Fontes
 
-**Índice da transcrição:** DEC-02, DEC-03, DEC-14, DEC-17 · RNF-01, RNF-06 · RES-02, RES-05 · ALT-02, ALT-03 · ABE-02 · COD-10, COD-12, COD-16 · TEC-01, TEC-02, TEC-03, TEC-20, TEC-25.
+**Índice da transcrição** — enumeração literal dos IDs citados no corpo deste ADR: DEC-02, DEC-03, DEC-14, DEC-17 · RNF-01, RNF-06 · RES-01, RES-02, RES-05 · ALT-02, ALT-03 · ABE-02 · COD-10, COD-12, COD-16 · TEC-01, TEC-02, TEC-03, TEC-20.
 
 **Arquivos reais:** `src/server.ts`, `src/app.ts`, `package.json`, `docker-compose.yml`, `.env.example` (`DATABASE_URL`).
 

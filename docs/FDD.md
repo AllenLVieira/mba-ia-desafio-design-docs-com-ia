@@ -21,9 +21,9 @@ Toda afirmação estruturante deste documento carrega uma marca de origem:
 |---|---|
 | **F** | **Fonte direta** — item do índice da transcrição (`DEC`/`RF`/`RNF`/`RES`/`TEC`/`COD`/`ABE`/`ADI`) ou arquivo real do repositório |
 | **D** | **Derivado** — consequência necessária de uma fonte (aritmética, convenção do código existente, ou implicação lógica de uma decisão) |
-| **P** | **Proposta do FDD sem origem** — ninguém decidiu; é escolha deste documento e está aberta a revisão |
+| **P** | **Proposta do FDD** — ninguém decidiu; é escolha deste documento, **endereçada a um aprovador nomeado** e **não é requisito enquanto não for aprovada** |
 
-Tudo que está marcado **P** está consolidado na seção [Premissas assumidas e derivações sem origem](#premissas-assumidas-e-derivações-sem-origem). Se você discorda de alguma, é lá que a lista está inteira, e não espalhada pelo texto.
+Tudo que está marcado **D** ou **P** está consolidado no [Registro de derivações e de aprovações pendentes](#registro-de-derivações-e-de-aprovações-pendentes), no fim do documento: cada **D** com a cadeia que o liga a um item de fonte, cada **P** com o aprovador e o fórum onde a decisão cabe. **Nenhum item deste documento fica sem um dos dois.** Se você discorda de algum, é lá que a lista está inteira, e não espalhada pelo texto.
 
 ---
 
@@ -780,7 +780,7 @@ Duas regras que valem escrever porque são o modo de falha real deste desenho (*
 
 Duas tabelas, deliberadamente separadas. Misturá-las seria o erro fácil aqui: os motivos de falha de entrega **não têm `statusCode`, não passam por `errorMiddleware` e não são erros da nossa API**.
 
-`TEC-16` nomeia três códigos e fecha com "etc." (Bruno `[09:29]`, **F**). A regra aplicada: **só entra código que corresponda a uma regra decidida em fonte** — nada de código de completude.
+`TEC-16` nomeia três códigos e fecha com "etc." (Bruno `[09:28]`, **F**). A regra aplicada: **só entra código que corresponda a uma regra decidida em fonte** — nada de código de completude.
 
 #### 9.6.1 Erros HTTP da API de webhooks
 
@@ -800,7 +800,7 @@ Todas as classes estendem `AppError` (`src/shared/errors/app-error.ts`) via as e
 
 > **Ressalva 1 — `WEBHOOK_INVALID_URL` versus `DEC-09`.** Sofia decidiu que a recusa de `http` é "só uma validação no schema Zod" (`DEC-09`/`TEC-26`, **F**). Mas validação Zod é convertida por `validate.middleware.ts` em `ValidationError`, e `errorMiddleware` responde **`VALIDATION_ERROR`**, não `WEBHOOK_INVALID_URL`. As duas fontes são incompatíveis no caminho HTTP normal. Resolução deste documento: a regra `https` fica no Zod (`DEC-09` é explícita e é da autora do requisito), o cliente vê `VALIDATION_ERROR` com `details[].path = "url"`, e `WEBHOOK_INVALID_URL` fica como guarda de serviço para chamadas que não passem pela rota. **Fica registrado como divergência entre `DEC-09` e `TEC-16` que o FDD não tem autoridade para fechar** (seção 13).
 >
-> **Ressalva 2 — `WEBHOOK_SECRET_REQUIRED` não tem gatilho.** Bruno nomeou o código às `[09:29]`; às `[09:31]` Marcos estabeleceu que "secret é gerada pela gente e devolvida na criação" (`TEC-14`). **O cliente nunca fornece secret, logo nunca pode omiti-la.** O código foi nomeado dois minutos antes da decisão que o tornou inalcançável. Mantido na matriz por ser fonte literal, marcado como candidato a remoção na revisão de design.
+> **Ressalva 2 — `WEBHOOK_SECRET_REQUIRED` não tem gatilho.** Bruno nomeou o código às `[09:28]`; às `[09:31]` Marcos estabeleceu que "secret é gerada pela gente e devolvida na criação" (`TEC-14`). **O cliente nunca fornece secret, logo nunca pode omiti-la.** O código foi nomeado três minutos antes da decisão que o tornou inalcançável. Mantido na matriz por ser fonte literal, marcado como candidato a remoção na revisão de design.
 
 #### 9.6.2 Motivos de falha de entrega (worker)
 
@@ -1044,7 +1044,7 @@ Padrão do projeto: Vitest 2.1.4, testes de integração contra banco real via `
 3. **`DELETE` de assinatura com histórico** — FK versus preservação da evidência de `RF-06` (6.6 e 7.4).
 4. **Disparo em `OrderService.create`** — nunca decidido (seção 3).
 5. **Armazenamento da secret em repouso** — decisão da revisão de `RNF-10` (8.3).
-6. **Formato do `X-Signature` durante a rotação** — derivação de maior alcance deste FDD (8.2).
+6. **Formato do `X-Signature` durante a rotação** — proposta de maior alcance deste FDD, endereçada a Sofia (8.2, itens `A-2` e `A-3` do registro).
 7. **Supervisão do worker** — sem lugar onde declarar o processo ([ADR-002](adrs/ADR-002-worker-em-processo-separado-com-polling.md)).
 8. **`RNF-01`, ordem sob retry** — escalados pela [RFC](RFC.md) e não decididos (9.1, 9.4).
 
@@ -1068,41 +1068,55 @@ Padrão do projeto: Vitest 2.1.4, testes de integração contra banco real via `
 
 ---
 
-## Premissas assumidas e derivações sem origem
+## Registro de derivações e de aprovações pendentes
 
-Tudo que este documento decidiu sem respaldo de fonte, em um lugar só. Se algo aqui for rejeitado na revisão, o impacto está nomeado.
+Tudo que este documento acrescentou além da fonte literal está aqui, em um lugar só, e **cada item tem um dos dois destinos abaixo — nenhum fica solto**:
 
-| # | Item | Seção | O que quebra se for rejeitado |
+- **`D` — derivação explícita.** O item é consequência necessária de um item que tem origem na transcrição ou no código. A coluna **Cadeia de derivação** mostra o caminho completo: o item de fonte, o passo lógico e o resultado. Uma derivação não precisa de aprovação para ser rastreável — precisa de que a cadeia esteja escrita e possa ser conferida. Se a cadeia estiver errada, o item cai.
+- **`A` — aprovação pendente.** O item é **proposta**, não informação de origem. Entra no pacote como **questão endereçada a uma pessoa nomeada, em um fórum que a própria reunião criou**: a **revisão de segurança de Sofia** (`RNF-10` `[09:46]` / `RES-06` `[09:49]`) ou a **sessão de revisão de design com Bruno e Diego** que Larissa assumiu abrir (`[09:50]`, nota de leitura (b)-2). Até a aprovação, o item **não é requisito** e não deve ser tratado como tal por quem implementa.
+
+### D — derivações explícitas (13)
+
+| # | Item | Seção | Cadeia de derivação |
 |---|---|---|---|
-| 1 | `attemptCount` e `nextAttemptAt` na outbox | 5.3 | a política de retry de [ADR-003](adrs/ADR-003-retry-com-backoff-exponencial-e-dead-letter-queue.md) deixa de ser executável — a RFC já dizia isso |
-| 2 | Tabela `webhook_deliveries` inteira (`ABE-04`) | 5.4 | `RF-06` deixa de ser implementável |
-| 3 | `PENDING` cobre "aguardando retentativa"; `FAILED` é terminal | 5.1 | a query de polling muda |
-| 4 | Um `eventId` por assinatura, não por mudança de status | 6.1 | dedup do cliente descartaria a entrega do segundo endpoint |
-| 5 | Duas assinaturas em `X-Signature` durante o grace period | 8.2 | `TEC-11` fica sem significado operacional — **maior alcance do documento** |
-| 6 | Formato `sha256=<hex>`, header único com vírgula | 8.2 | contrato de saída muda |
-| 7 | Secret em claro, sem cifragem proposta | 8.3 | decisão de `RNF-10` |
-| 8 | Recuperação de órfãs: shutdown gracioso + lease | 6.5 | eventos somem em todo deploy do worker |
-| 9 | Coluna `requestId` e sua propagação | 5.3, 10.3 | não há correlação entre API e worker |
-| 10 | Nomes dos eventos de log | 10.1 | nada estrutural |
-| 11 | Métricas como grandezas + query, sem exportador | 10.2 | nada estrutural; o alvo continua sem instrumentação |
-| 12 | Teto no `responseBody` armazenado | 5.4 | linha de tabela cresce com dado de terceiro |
-| 13 | Janela de 100 + envelope paginado em `RF-06` | 7.5 | forma da resposta muda |
-| 14 | 3xx tratado como falha, sem seguir redirect | 6.2 | payload assinado poderia ir a host não cadastrado |
-| 15 | `WEBHOOK_ROTATION_IN_PROGRESS` e `WEBHOOK_SUBSCRIPTION_IN_USE` | 9.6.1 | dois caminhos ficam sem resposta definida |
-| 16 | `WEBHOOK_SUBSCRIPTION_INACTIVE` como motivo de DLQ | 6.6 | evento de assinatura desativada fica sem destino |
-| 17 | `customerId` não editável no `PATCH` | 7.3 | histórico poderia trocar de dono |
-| 18 | `WEBHOOK_POLL_BATCH_SIZE = 20`, `WEBHOOK_PROCESSING_LEASE_MS = 60000` | 12.2 | ajuste de tuning |
-| 19 | Nomes `webhook_subscriptions` e `webhook_deliveries`, dimensionamentos de coluna | 5.2, 5.4 | nada estrutural |
-| 20 | Script `worker:start` | 11.2 | `TEC-20` só nomeou um script |
-| 21 | Prefixo `whsec_` na secret | 7.1 | nada estrutural |
+| D-1 | `attemptCount` e `nextAttemptAt` na outbox | 5.3 | `DEC-05` `[09:17]` fixa 5 tentativas com intervalos 1m/5m/30m/2h/12h **+** `TEC-03` `[09:09]` põe o worker em polling sem estado em memória ⇒ contagem e instante da próxima tentativa **têm** de estar na linha, ou o intervalo decidido não é executável |
+| D-2 | `PENDING` cobre "aguardando retentativa"; `FAILED` é terminal | 5.1 | `TEC-01` `[09:08]` nomeia exatamente quatro estados (pendente, processando, falhou, entregue) **+** `DEC-05` cria a espera entre tentativas ⇒ a espera tem de caber em um dos quatro; `FAILED` é o que `DEC-06` `[09:18]` encaminha à DLQ, logo é o terminal |
+| D-3 | Um `eventId` por assinatura, não por mudança de status | 6.1 | `DEC-16` `[09:34]` filtra na inserção (uma linha por assinatura interessada) **+** `TEC-04` `[09:25]` gera o UUID "quando o evento entra na outbox", único por evento ⇒ uma linha ⇒ um `eventId`. Compartilhá-lo faria a dedup de `DEC-10` descartar a entrega do segundo endpoint |
+| D-4 | Recuperação de linhas órfãs em `PROCESSING` | 6.5 | `TEC-01` cria o estado "processando" **+** `DEC-03`/`RES-05` `[09:11]` põem o worker em processo separado, que reinicia ⇒ um estado do qual só se sai por sucesso ou falha precisa de regra de saída no reinício. *O valor do lease é `A-7`* |
+| D-5 | Teto no `responseBody` armazenado | 5.4 | `DEC-18` `[09:24]` estabelece o princípio: dado de tamanho não controlado ganha teto e falha com erro, não trunca em silêncio. `responseBody` é o único outro campo de tamanho não controlado do desenho, e vem de terceiro ⇒ mesmo princípio, mesma fonte |
+| D-6 | Janela de 100 + envelope paginado em `RF-06` | 7.5 | os 100 são literais de `RF-06` `[09:34]` **+** o envelope vem do código: `paginated<T>` em `src/shared/http/response.ts`, usado por toda listagem, sob `RES-03`/`DEC-11` `[09:30]` (reuso de padrões) |
+| D-7 | 3xx tratado como falha, sem seguir redirect | 6.2 | `DEC-09`/`RNF-07` `[09:23]` tornam a URL https cadastrada a **única** autorizada **+** `DEC-08` `[09:22]` assina o corpo para aquele endpoint ⇒ seguir redirect entregaria payload assinado a host que nunca passou pela validação |
+| D-8 | `WEBHOOK_ROTATION_IN_PROGRESS` e `WEBHOOK_SUBSCRIPTION_IN_USE` | 9.6.1 | `TEC-16` `[09:28]` fixa o prefixo e fecha com "etc." **+** os dois caminhos são criados pela própria fonte: rotação com grace period (`TEC-11` `[09:21]`) e `DELETE` (`RF-03`) sobre assinatura com histórico (`RF-06`) **+** `ConflictError` já aceita código próprio (`src/modules/orders/order.service.ts` linha 187) |
+| D-9 | `WEBHOOK_SUBSCRIPTION_INACTIVE` como motivo de DLQ | 6.6 | `TEC-13` `[09:21]` cria o campo "estado ativo" **+** `DEC-06` `[09:18]` exige "motivo da falha" na DLQ ⇒ desativar assinatura com evento em trânsito é um motivo que a fonte criou e não nomeou |
+| D-10 | `customerId` não editável no `PATCH` | 7.3 | `RES-07` `[09:32]` põe o `customerId` fora do JWT, no request **+** `RF-06` `[09:34]` prende o histórico à assinatura ⇒ permitir a troca faria o histórico de um cliente mudar de dono por um `PATCH` |
+| D-11 | Nomes de tabela e dimensionamentos de coluna | 5.2, 5.4 | `TEC-01` e `TEC-12` já nomeiam `webhook_outbox` e `webhook_dead_letter` em snake_case **+** `prisma/schema.prisma` mapeia todo model com `@@map` em snake_case plural ⇒ os outros dois nomes seguem a mesma regra |
+| D-12 | Nomes dos eventos de log | 10.1 | código: `src/middlewares/request-logger.middleware.ts` emite `http_request` em snake_case **+** `COD-07` `[09:29]` e `RES-03` mandam reusar o Pino existente sem inventar padrão novo |
+| D-13 | Script `worker:start` | 11.2 | `TEC-20` `[09:11]` decide o script `worker` **+** `package.json` já pareia `dev` (tsx watch) com `start` (node dist) ⇒ o par simétrico para o worker é derivação da convenção existente, não invenção |
 
-**Premissa de fluxo declarada separadamente**: a seção 6 é construída sobre a perna "aceitar e documentar" da quebra de ordem sob retry — recomendação da [RFC](RFC.md) **não decidida por ninguém** (9.4).
+### A — propostas pendentes de aprovação (8)
+
+Cada linha é uma **questão endereçada**, não uma decisão registrada.
+
+| # | Proposta | Seção | Aprovador e fórum | O que quebra se for rejeitada |
+|---|---|---|---|---|
+| A-1 | Tabela `webhook_deliveries` inteira | 5.4 | Bruno e Diego, na sessão de revisão de design (`[09:50]`) | é a **resposta proposta a `ABE-04`**, questão que a própria reunião deixou aberta; sem ela `RF-06` não é implementável, e uma resposta diferente muda a seção 7.5 |
+| A-2 | Duas assinaturas em `X-Signature` durante o grace period | 8.2 | **Sofia**, revisão de segurança (`RNF-10`) | é a **derivação de maior alcance deste documento** e a mais exposta: sem ela, o grace period de 24h de `TEC-11` fica sem significado operacional; com ela, o contrato de saída muda para todos os clientes |
+| A-3 | Formato `sha256=<hex>`, header único com vírgula | 8.2 | **Sofia**, revisão de segurança | o contrato de saída muda. Decidir junto com `A-2`, não depois |
+| A-4 | Secret armazenada em claro, sem cifragem | 8.3 | **Sofia**, revisão de segurança — ela nomeou "geração de secret" como foco (`[09:46]`) | é exatamente o objeto da revisão que `RES-06` tornou bloqueante; nenhuma outra pessoa tem autoridade para fechar |
+| A-5 | Coluna `requestId` e sua propagação entre processos | 5.3, 10.3 | Bruno e Diego, revisão de design — toca `order.controller.ts` | sem ela não há correlação entre a requisição da API e a entrega feita pelo worker |
+| A-6 | Métricas como grandezas + query, sem exportador | 10.2 | Larissa e Diego, revisão de design | o alvo de `RNF-01` continua sem instrumentação, e as métricas do [PRD §4.2](PRD.md) ficam sem fonte de dado |
+| A-7 | `WEBHOOK_POLL_BATCH_SIZE = 20` e `WEBHOOK_PROCESSING_LEASE_MS = 60000` | 12.2 | Diego, revisão de design | `TEC-02` `[09:08]` diz "batch pequeno" e não dá número; os dois valores são tuning e nada mais depende deles |
+| A-8 | Prefixo `whsec_` na secret | 7.1 | **Sofia**, revisão de segurança | nada estrutural; é convenção de formato do valor que ela vai revisar de qualquer forma |
+
+**Premissa de fluxo declarada separadamente**: a seção 6 é construída sobre a perna "aceitar e documentar" da quebra de ordem sob retry — recomendação da [RFC](RFC.md) **não decidida por ninguém** (9.4). Ela não está nas tabelas acima porque não é proposta deste documento: é uma escolha entre duas saídas que a RFC já escalou, e o dono é Larissa ([PRD §13, questão 5](PRD.md#13-questões-abertas-de-produto)).
 
 ---
 
 ## Fontes
 
-**Índice da transcrição** (`.scratch/fontes/transcricao-index.md`): DEC-01 a DEC-20 · RF-01 a RF-11 · RNF-01 a RNF-10 · RES-01 a RES-07 · ALT-01 a ALT-08 · ADI-01 a ADI-06 · ABE-01 a ABE-05 · COD-01 a COD-16 · TEC-01 a TEC-29 · notas de leitura (a), (b) e (c).
+**Índice da transcrição** (`.scratch/fontes/transcricao-index.md`) — **enumeração literal: cada ID abaixo é citado no corpo deste documento**, e nenhum ID citado ficou de fora (97 IDs):
+
+DEC-02, DEC-03, DEC-04, DEC-05, DEC-06, DEC-07, DEC-08, DEC-09, DEC-10, DEC-11, DEC-12, DEC-14, DEC-15, DEC-16, DEC-17, DEC-18, DEC-19, DEC-20 · RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-07, RF-08, RF-09, RF-10, RF-11 · RNF-01, RNF-02, RNF-04, RNF-05, RNF-06, RNF-07, RNF-10 · RES-01, RES-02, RES-03, RES-04, RES-05, RES-06, RES-07 · ALT-06, ALT-07, ALT-08 · ADI-01, ADI-02, ADI-03, ADI-04, ADI-05, ADI-06 · ABE-01, ABE-02, ABE-03, ABE-04 · COD-04, COD-05, COD-06, COD-07, COD-08, COD-09, COD-10, COD-11, COD-12, COD-13, COD-14, COD-16 · TEC-01, TEC-02, TEC-03, TEC-04, TEC-05, TEC-06, TEC-07, TEC-08, TEC-09, TEC-10, TEC-11, TEC-12, TEC-13, TEC-14, TEC-15, TEC-16, TEC-17, TEC-18, TEC-19, TEC-20, TEC-21, TEC-22, TEC-23, TEC-24, TEC-25, TEC-26, TEC-27, TEC-28, TEC-29 · notas de leitura (a), (b) e (c).
 
 **Documentos do pacote**: [RFC](RFC.md) · [ADR-001](adrs/ADR-001-outbox-transacional-no-mysql.md) · [ADR-002](adrs/ADR-002-worker-em-processo-separado-com-polling.md) · [ADR-003](adrs/ADR-003-retry-com-backoff-exponencial-e-dead-letter-queue.md) · [ADR-004](adrs/ADR-004-assinatura-hmac-sha256-com-secret-por-endpoint.md) · [ADR-005](adrs/ADR-005-entrega-at-least-once-com-event-id.md) · [ADR-006](adrs/ADR-006-reuso-dos-padroes-existentes-do-projeto.md) · [ADR-007](adrs/ADR-007-ordering-por-order-id-sob-single-worker.md).
 

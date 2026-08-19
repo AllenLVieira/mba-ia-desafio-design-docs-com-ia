@@ -67,7 +67,7 @@ O requisito de integridade é absoluto: "se a transação principal commitou, o 
 
 ## Fontes
 
-**Índice da transcrição:** DEC-01, DEC-15, DEC-16, DEC-18, DEC-19 · RF-05, RF-11 · RNF-04, RNF-05 · RES-01 · ALT-01, ALT-02, ALT-08 · ADI-04 · ABE-04 · COD-01, COD-02, COD-03, COD-13, COD-14 · TEC-01, TEC-15, TEC-17, TEC-18, TEC-19, TEC-29.
+**Índice da transcrição** — enumeração literal dos IDs citados no corpo deste ADR: DEC-01, DEC-15, DEC-16, DEC-18, DEC-19 · RF-05, RF-06, RF-11 · RNF-04, RNF-05 · RES-01 · ALT-01, ALT-02, ALT-08 · ADI-04 · ABE-04 · COD-01, COD-13, COD-14 · TEC-01, TEC-15, TEC-17, TEC-29.
 
 **Arquivos reais:** `src/modules/orders/order.service.ts` (`changeStatus`), `prisma/schema.prisma`, `docker-compose.yml`, `CONTEXT.md` §16 e §17.
 

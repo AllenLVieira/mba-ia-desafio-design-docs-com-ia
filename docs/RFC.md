@@ -115,10 +115,10 @@ Contrato detalhado — payloads, status codes, semântica — é matéria do FDD
 | RF-03 | `DELETE /api/v1/webhooks/:id` | autenticado | derivado |
 | RF-04 / RF-05 | `GET /api/v1/webhooks?customerId=` | autenticado | derivado |
 | RF-06 | `GET /api/v1/webhooks/:id/deliveries` | autenticado | **literal** (`TEC-21`) |
-| RF-07 | `POST /api/v1/webhooks/:id/rotate-secret` | autenticado | **proposto — sem origem na transcrição** |
+| RF-07 | `POST /api/v1/webhooks/:id/rotate-secret` | autenticado | **derivado** — ver ressalva |
 | RF-08 | `POST /api/v1/admin/webhooks/dead-letter/:id/replay` | `requireRole('ADMIN')` (`DEC-12`) | **literal** (`TEC-22`) |
 
-Duas ressalvas de honestidade sobre esta tabela. **RF-07 não tem caminho de origem**: Sofia especificou apenas "endpoint pro cliente conseguir pedir nova secret pela API" (`RF-07`), e o caminho acima é proposta desta RFC, não decisão. E **`customerId` vai no body do `POST` e na query do `GET`**, com o path reservado ao `:id` do próprio recurso — resolução de `ABE-03` pela convenção real de `src/modules/orders/order.schemas.ts` (`createOrderSchema` declara `customerId` no body; `listOrdersQuerySchema`, na query). A reunião fechou apenas que o `customer_id` **não vem do JWT** (`RES-07`); a forma exata segue carecendo de aval.
+Duas ressalvas de honestidade sobre esta tabela. **O caminho de RF-07 não é literal da reunião, é derivação — e a cadeia é esta**: a existência do endpoint é decisão de Sofia (`RF-07`, `[09:21]`: "endpoint pro cliente conseguir pedir nova secret pela API"); o **prefixo** `/api/v1` vem de `src/app.ts`; o **recurso** `/webhooks/:id` já está fixado pelas cinco linhas acima; e a **forma ação-sobre-recurso** `POST /<recurso>/:id/<ação>` é a mesma de `TEC-22`, que é literal da reunião (`POST /admin/webhooks/dead-letter/:id/replay`). Nenhum segmento do caminho é invenção; o que falta é **aval**, e ele está na confirmação 13 abaixo. E **`customerId` vai no body do `POST` e na query do `GET`**, com o path reservado ao `:id` do próprio recurso — resolução de `ABE-03` pela convenção real de `src/modules/orders/order.schemas.ts` (`createOrderSchema` declara `customerId` no body; `listOrdersQuerySchema`, na query). A reunião fechou apenas que o `customer_id` **não vem do JWT** (`RES-07`); a forma exata segue carecendo de aval.
 
 ### Fora de escopo desta fase
 
@@ -175,6 +175,16 @@ Itens que a reunião **decidiu adiar** — não são questões em aberto, são f
 11. **`ABE-01` / `ADI-02` — rate limiting de envios.** Item com classificação divergente: Diego pediu para registrar como ponto em aberto (`[09:39]`), Larissa reclassificou como "observar e decidir depois". Não há decisão de implementar nem de descartar. Relevante porque um cliente com endpoint instável gera até 6× o volume normal de requisições saindo da plataforma.
 12. **Modelo de ameaça não explorado.** Assinatura assimétrica e mTLS não foram levantados por ninguém na reunião, e a assinatura de `DEC-08` cobre apenas o corpo — `X-Timestamp` e `X-Webhook-Id` trafegam fora da proteção. Material para a revisão de `RNF-10`.
 
+### Desambiguações feitas fora da reunião — precisam de ratificação
+
+Três pontos em que **a pergunta tem origem na transcrição e a resposta não**. Elas foram resolvidas para que o [FDD](FDD.md) pudesse ser escrito, mas **quem escolheu foi o processo de produção do documento, não um participante** — e por isso entram aqui, e não como decisão. Enquanto não forem ratificadas, são reversíveis sem custo de contrato.
+
+| # | Pergunta que a fonte deixou aberta | Resposta adotada | Ratificação com |
+|---|---|---|---|
+| 13 | Caminho do endpoint de rotação de secret — `RF-07` cria o endpoint sem nomear o caminho (`[09:21]`) | `POST /api/v1/webhooks/:id/rotate-secret`, pela cadeia descrita na superfície de API | Larissa e Bruno, na revisão de design |
+| 14 | `ABE-02` — nome do arquivo de lógica do worker: Bruno ofereceu `webhook.worker.ts` **ou** `webhook.processor.ts` (`[09:28]`), Diego respondeu "Beleza" sem escolher | `webhook.worker.ts`, convivendo com `src/worker.ts` como entry point de `TEC-20` | Bruno e Diego, na revisão de design |
+| 15 | `TEC-24` — "5 tentativas" inclui o envio inicial? Nunca foi dito (`[09:15]` / `[09:17]`) | **cinco retentativas além do envio inicial — seis chamadas HTTP no total**, porque a progressão de `DEC-05` tem cinco intervalos e cada intervalo antecede uma tentativa | Diego e Larissa — **é a única das três que muda comportamento observável** (o instante da dead letter) |
+
 ---
 
 ## Impacto e riscos
@@ -208,6 +218,8 @@ Itens que a reunião **decidiu adiar** — não são questões em aberto, são f
 
 ## Fontes
 
-**Índice da transcrição** (`.scratch/fontes/transcricao-index.md`): DEC-01 a DEC-20 · RF-01 a RF-11 · RNF-01 a RNF-10 · RES-01 a RES-07 · ALT-01 a ALT-08 · ADI-01 a ADI-06 · ABE-01, ABE-03, ABE-04, ABE-05 · COD-01, COD-02, COD-03, COD-08, COD-11, COD-13, COD-14 · TEC-01, TEC-02, TEC-04, TEC-12, TEC-13, TEC-15, TEC-20, TEC-21, TEC-22, TEC-28, TEC-29 · notas de leitura (a), (b) e (c)-4.
+**Índice da transcrição** (`.scratch/fontes/transcricao-index.md`) — **enumeração literal: cada ID abaixo é citado no corpo deste documento**, e nenhum ID citado ficou de fora (75 IDs):
+
+DEC-02, DEC-03, DEC-04, DEC-05, DEC-06, DEC-07, DEC-08, DEC-10, DEC-11, DEC-12, DEC-13, DEC-14, DEC-15, DEC-16, DEC-17, DEC-18, DEC-19, DEC-20 · RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-07, RF-08, RF-11 · RNF-01, RNF-04, RNF-06, RNF-10 · RES-01, RES-03, RES-04, RES-05, RES-06, RES-07 · ALT-01, ALT-02, ALT-03, ALT-04, ALT-05, ALT-06, ALT-07, ALT-08 · ADI-01, ADI-02, ADI-03, ADI-04, ADI-05, ADI-06 · ABE-01, ABE-02, ABE-03, ABE-04, ABE-05 · COD-01, COD-02, COD-03, COD-08, COD-11, COD-13, COD-14 · TEC-01, TEC-02, TEC-04, TEC-12, TEC-13, TEC-15, TEC-20, TEC-21, TEC-22, TEC-24, TEC-28, TEC-29 · notas de leitura (a), (b) e (c)-4.
 
 **Arquivos reais:** `src/modules/orders/order.service.ts` (`changeStatus`, `create`), `src/modules/orders/order.schemas.ts` (`createOrderSchema`, `listOrdersQuerySchema`), `src/modules/orders/order.routes.ts`, `src/routes/index.ts` (`buildApiRouter`), `src/app.ts` (`buildApp`, `buildControllers`), `src/server.ts`, `src/middlewares/auth.middleware.ts` (`authenticate`, `requireRole`), `src/middlewares/error.middleware.ts` (`errorMiddleware`), `src/middlewares/validate.middleware.ts` (`validate`), `src/shared/errors/app-error.ts` (`AppError`), `src/shared/logger/index.ts` (`logger`, lista de `redact`), `src/config/env.ts` (`envSchema`), `prisma/schema.prisma`, `tests/setup.ts`, `docker-compose.yml`, `CONTEXT.md` §16, §17.2, §17.4, §17.6.

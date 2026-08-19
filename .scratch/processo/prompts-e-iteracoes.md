@@ -1043,4 +1043,206 @@ regra — e só uma varredura posterior encontra.
 
 <!-- próxima fase: README do processo -->
 
+---
+
+# Fase 7 — Correção dos achados e destino dos itens propostos
+
+Fase não planejada, aberta depois de uma leitura crítica externa do pacote fechado. Ela
+derrubou as duas posturas que a Fase 5 tinha adotado por convicção metodológica.
+
+## O que a leitura externa apontou
+
+1. **Os erros conhecidos permaneceram na entrega.** O tracker registrava cinco achados e não
+   corrigia nenhum. "Registrar o defeito é excelente prática de auditoria, mas não satisfaz o
+   critério final de que nenhuma informação contradiga ou represente incorretamente a fonte."
+2. **Os 41 itens sem origem continuavam sem origem.** Separá-los com honestidade não os torna
+   rastreáveis. "Propostas técnicas são necessárias para tornar um FDD acionável, mas deveriam
+   aparecer como questões sujeitas à aprovação ou ser justificadas como derivações explícitas.
+   A marca **P** evita alucinação silenciosa, porém não transforma esses itens em informação
+   originada na fonte."
+
+Os dois pontos atacam o mesmo erro de raciocínio, em dois lugares: **confundir declarar um
+problema com resolvê-lo**. O argumento "auditoria não edita o que audita" é verdadeiro sobre
+*como auditar* e irrelevante sobre *o que entregar* — a entrega não é a auditoria, é o pacote,
+e o critério fala do pacote.
+
+## De onde o defeito veio: duas linhas do prompt #7
+
+Antes do prompt novo, vale nomear o que no prompt anterior produziu as duas falhas. Não foi
+falta de rigor da sessão — foi o prompt que pediu o resultado errado, nos dois casos.
+
+1. **Pergunta (c), última frase:** *"E quando a varredura encontrar divergência real, você
+   corrige o documento na hora ou só reporta e espera minha decisão? Minha inclinação é só
+   reportar — corrigir PRD ou FDD dentro de uma passada de tracker é como um teste consertar o
+   código que ele está testando."*
+   A pergunta vinha com a resposta anexada. A analogia é boa e a conclusão não segue dela: um
+   teste não conserta o código, mas o time **conserta o código antes de entregar**. Faltou a
+   fase seguinte, e nada no prompt a exigia.
+
+2. **Bloco de contexto, segundo item:** *"O PACOTE TEM ITENS DELIBERADAMENTE SEM ORIGEM, E ELES
+   NÃO PODEM GANHAR UMA."*
+   A regra está certa e é **incompleta**. Ela proíbe o destino errado (inventar `[hh:mm]`) e
+   não exige nenhum destino certo. O resultado foi previsível: a sessão fez exatamente o que
+   foi pedido — separou os 41 numa tabela própria — e parou ali, porque ali era o fim da
+   instrução.
+
+A lição de prompt, então, tem duas partes. **Não anexe sua inclinação à pergunta que você está
+fazendo** — a sessão a devolve validada, e você troca uma decisão por um eco. E **toda proibição
+precisa de uma obrigação ao lado**: "não faça X" sem "faça Y" produz um vazio, e o vazio passa
+despercebido porque nada no texto o denuncia.
+
+## O prompt da Fase 7
+
+Escrito para atacar as duas omissões de frente. É o prompt que, colocado na Fase 5, teria
+evitado esta fase inteira.
+
+```
+Passada de correção sobre o pacote fechado. Duas coisas estão erradas nele, e as
+duas são do mesmo tipo: eu confundi DECLARAR um problema com RESOLVÊ-LO.
+
+Problema 1 — os defeitos conhecidos ficaram na entrega.
+O TRACKER §5 lista cinco achados (A-01 a A-05) e não corrige nenhum, com o
+argumento de que "auditoria não edita o que audita". Esse argumento é verdadeiro
+sobre COMO AUDITAR e irrelevante sobre O QUE ENTREGAR. O critério de aceite não
+diz "nenhuma divergência não declarada"; diz que nenhuma informação registrada
+pode contradizer ou representar incorretamente a fonte. Um timestamp que aponta
+para a fala errada representa a fonte incorretamente esteja ou não confessado
+três seções abaixo.
+
+Problema 2 — os 41 itens "sem origem" continuam sem origem.
+Separá-los com honestidade não os torna rastreáveis, e a regra do desafio é que
+TODA informação registrada seja rastreável. A marca P impede alucinação
+silenciosa e não transforma proposta em informação originada na fonte.
+
+Tarefa 1: corrigir A-01 a A-05, e o rastro tem que sobreviver à correção.
+- Corrija na origem e em TODA propagação. Para cada achado, localize antes as
+  ocorrências: as do próprio defeito e as legítimas que compartilham o mesmo
+  valor. A-01 é [09:29] -> [09:28] em cinco itens, mas COD-07 e COD-08 estão
+  corretos em [09:29] e NÃO podem ser tocados. A-02 é [09:47] -> [09:49] em
+  ABE-05, mas DEC-13 está correto em [09:47]. Corrigir demais é o mesmo defeito
+  na direção oposta.
+- TRANSCRICAO.md não se toca. A fonte não se corrige.
+- Reescreva cada achado do TRACKER §5 preservando o QUE ESTAVA, o QUE FICOU e os
+  ARQUIVOS ALTERADOS. Apagar o achado junto com o defeito destrói a evidência de
+  que a auditoria funcionou.
+- A-04 foi levantado sobre PRD, RFC e FDD. Rode a mesma varredura nos 7 ADRs
+  antes de declarar o achado fechado, e nos DOIS sentidos: ID declarado na seção
+  Fontes e não citado no corpo, E ID citado no corpo e ausente da seção Fontes.
+  O segundo caso é o mais grave, porque some com a origem em vez de inflá-la.
+- Corrigir A-03 direito significa SEPARAR a linha do índice em duas, o que muda
+  a contagem de itens da reunião. Se mudar, varra todo lugar do repositório que
+  cita a contagem antiga.
+- Ao fim, reverifique do zero sobre os arquivos corrigidos e publique o
+  resultado da reverificação, não a intenção da correção.
+
+Tarefa 2: dar destino aos 41 itens, não apenas rótulo.
+Cada um passa a ser exatamente uma de duas coisas, e nenhum fica solto:
+
+(D) DERIVAÇÃO EXPLÍCITA — consequência necessária de um item que TEM origem.
+Escreva a CADEIA: item de fonte (com ID e timestamp, ou caminho de arquivo) ->
+passo lógico -> resultado. Uma derivação com a cadeia escrita é rastreável: a
+origem é indireta e conferível, e se a cadeia estiver errada o item cai junto.
+Cadeia de uma linha vaga ("decorre da arquitetura") não vale — se você não
+consegue nomear o item de origem, não é derivação.
+
+(A) PROPOSTA PENDENTE DE APROVAÇÃO — escolha do documento, e nada mais. Entra
+como PERGUNTA ENDEREÇADA, com: aprovador nomeado, fórum onde a decisão cabe,
+prazo, e o que se perde se for rejeitada. E o documento tem que dizer, no ponto
+em que a proposta aparece, que enquanto não aprovada ela NÃO É requisito, meta
+nem compromisso.
+
+Regra de corte, e ela é conservadora: para cada item, pergunte "se um
+participante da reunião lesse a cadeia, ele diria 'isso decorre do que eu
+decidi' ou 'isso é escolha de vocês'?". Só a primeira resposta vira D. Na
+dúvida, vai para A. Se a tabela de derivações sair maior que a de aprovações,
+você foi generoso demais — reveja.
+
+Restrição sobre os fóruns: NÃO invente instância de aprovação. Use apenas as que
+a reunião criou, e nomeie a fala que as criou. Se um item não couber em nenhuma
+delas, isso é o achado, não um convite para inventar um comitê.
+
+Comece me perguntando:
+
+(a) Onde mora a lista reclassificada. O FDD tem o ledger, o TRACKER tem a seção
+3, e os itens do PRD estão espalhados em três seções. Uma lista canônica com as
+outras apontando para ela, ou cada documento carrega a sua e o TRACKER
+consolida? Recomende uma e diga o que se duplica na outra.
+
+(b) O que acontece com a numeração existente. FDD-P-01 a FDD-P-21 estão citados
+em outros documentos. A reclassificação renumera (e obriga a varrer as
+referências) ou preserva os IDs e acrescenta a classificação como coluna?
+
+(c) O README e o registro de processo afirmam hoje, com todas as letras, que
+nenhum achado foi corrigido — é uma seção inteira defendendo a escolha. Reescrevo
+como se a escolha nunca tivesse existido, ou registro a mudança de posição com o
+argumento que a derrubou? Minha inclinação é a segunda, e quero que você discorde
+se achar que ela infla a narrativa.
+```
+
+**Decisões que as três perguntas fecharam:** (a) lista canônica por documento, com o TRACKER §3
+consolidando as duas categorias e o FDD/PRD carregando a sua parte no ponto de uso — nenhuma
+proposta fica visível só no consolidado; (b) **IDs preservados** (`FDD-P-01` continua
+`FDD-P-01`), com a classificação entrando como estrutura de tabela, porque renumerar 41 itens
+citados em cinco documentos troca um defeito de rastreabilidade por outro; (c) registrar a
+mudança de posição com o argumento que a derrubou — a seção "Seis achados encontrados e nenhum
+corrigido" do README virou "Seis achados encontrados — e a Fase 5 parou aí", seguida da nova
+"Fase 7 — o que eu errei ao só reportar".
+
+## O que a fase fez
+
+### 1. Correção dos cinco achados, com o rastro preservado
+
+| Achado | Correção | Arquivos |
+|---|---|---|
+| A-01 | `[09:29]` → `[09:28]` em `COD-04`, `COD-05`, `COD-06`, `COD-15`, `TEC-16`; FDD §9.6 e ressalva 2 ("dois minutos" → "três minutos"); ADR-006 em duas citações | índice, `FDD.md`, `ADR-006` |
+| A-02 | `ABE-05` e nota (b)-1 → `[09:49]`, com a fala de `[09:47]` nomeada ao lado; PRD §2.2 e `D-04` idem | índice, `PRD.md` |
+| A-03 | `RES-04` separado em `RES-04` (pressão comercial, `[09:00]`) e `RES-08` (data-alvo, `[09:45]`) | índice, `PRD.md` |
+| A-04 | Enumeração literal de IDs nas seções "Fontes" — **e a varredura estendida aos 7 ADRs**, que o achado original não cobria | `PRD.md`, `RFC.md`, `FDD.md`, 7 ADRs |
+| A-05 | Faixa `[09:09]`–`[09:10]` separada nas duas falas, com o papel de cada uma | `ADR-002` |
+
+`TRANSCRICAO.md` não foi tocado. A seção 5 do tracker passou a registrar, por achado, **o que
+estava, o que ficou e os arquivos alterados** — o rastro da auditoria sobrevive à correção.
+
+**Duas coisas que só apareceram ao corrigir:**
+
+- **A-04 era maior do que o achado dizia.** Aplicada aos ADRs, a varredura encontrou 8 IDs
+  declarados e não citados **e 10 IDs citados no corpo e ausentes da lista de fontes**. O
+  segundo caso é pior que o primeiro: infla-declaração é bibliografia frouxa, sub-declaração
+  **some com a origem**. A correção deixou de ser edição manual e virou geração da lista a
+  partir do corpo, com verificação nos dois sentidos nos dez documentos.
+- **Corrigir A-03 direito mexe num denominador publicado.** Separar a linha significou 113
+  itens no índice em vez de 112 — número que aparece na varredura reversa do tracker, no
+  README e na descrição do artefato. Correção de rastreabilidade que muda contagem obriga a
+  varrer todo lugar que cita a contagem.
+
+### 2. Destino dos 41 itens acrescentados
+
+A regra nova: **todo item que não é citação de fala nem leitura de arquivo pertence a uma de
+duas categorias, e nenhum fica solto.**
+
+- **Derivação explícita (14).** Consequência necessária de um item que tem origem, com a
+  **cadeia escrita**: item de fonte → passo lógico → resultado. Uma derivação com cadeia é
+  rastreável — a origem é indireta e conferível, e se a cadeia estiver errada o item cai.
+- **Proposta pendente de aprovação (27).** Escolha do documento, e nada mais. Entra como
+  **pergunta endereçada a pessoa nomeada, em fórum que a própria reunião criou** — a revisão
+  de segurança de Sofia (`RNF-10` `[09:46]`, bloqueante por `RES-06`) ou a sessão de revisão
+  de design que Larissa assumiu abrir (`[09:50]`). Enquanto não aprovada, **não é requisito**.
+
+O critério de corte entre as duas foi deliberadamente conservador: na dúvida, o item foi para
+"aprovação pendente". A pergunta aplicada a cada um foi *"se um participante da reunião lesse
+a cadeia, ele diria 'isso decorre do que eu decidi' ou 'isso é escolha de vocês'?"*. Só a
+primeira resposta vira derivação — e é por isso que a tabela de aprovações é quase o dobro da
+de derivações.
+
+Onde os itens foram parar: `FDD.md` (registro final, reescrito), `PRD.md` §13.1 (nova, 16
+propostas com aprovador e prazo), `RFC.md` (RF-07 com a cadeia do caminho, e as 3
+desambiguações como confirmações 13 a 15), `TRACKER.md` §3 (reescrita nas duas categorias).
+
+## A lição
+
+**Um pacote de documentação não é avaliado pela qualidade da sua consciência sobre si mesmo.**
+Saber onde está o defeito é pré-requisito de corrigi-lo, não substituto. O tracker fez o
+trabalho difícil — encontrar; a Fase 5 parou no passo fácil. E a mesma forma vale para a marca
+**P**: separar o que não tem origem é o começo do trabalho de rastreabilidade, não o fim dele.
+
 

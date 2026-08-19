@@ -62,7 +62,7 @@ A propriedade emerge do desenho de [ADR-002](ADR-002-worker-em-processo-separado
 
 ## Fontes
 
-**Índice da transcrição:** DEC-02, DEC-04, DEC-05 · RNF-08 · ADI-05 · TEC-02, TEC-17, TEC-19, TEC-27.
+**Índice da transcrição** — enumeração literal dos IDs citados no corpo deste ADR: DEC-04, DEC-05 · RNF-08 · ADI-05 · TEC-02, TEC-17, TEC-19, TEC-27.
 
 **Arquivos reais:** `src/modules/orders/order.status.ts` (`canTransition`, `allowedTransitions`, `isTerminal`, tabela `transitions`), `prisma/schema.prisma` (enum `OrderStatus`).
 

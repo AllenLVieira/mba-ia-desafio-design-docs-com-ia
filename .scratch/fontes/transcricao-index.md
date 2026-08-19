@@ -86,10 +86,11 @@
 | RES-01 | Stack restrita ao MySQL existente; proibido subir nova infra como Redis Cluster | Diego | `[09:07]` | "a gente é um time pequeno. Subir Redis Cluster pra isso é overengineering. Outbox no MySQL existente resolve." |
 | RES-02 | Worker deve usar a mesma DATABASE_URL e stack (Prisma) do projeto existente | Bruno | `[09:11]` | "Pode ser, mas vai precisar conectar no mesmo banco e usar o mesmo Prisma client." |
 | RES-03 | Reuso obrigatório de padrões existentes: AppError, Pino, error middleware, módulos, Zod | Larissa | `[09:30]` | "Decisão: reuso máximo do que já existe. AppError, Pino, error middleware, padrão de módulos, padrão de schemas Zod, padrão de códigos de erro." |
-| RES-04 | Prazo externo: entrega até fim de novembro (exigência da Atlas Comercial, sob risco de migração para concorrente) | Marcos | `[09:00]` | "A Atlas chegou a sugerir que se a gente não entregar isso até fim do trimestre, eles podem migrar pro nosso concorrente." |
+| RES-04 | Pressão comercial: a Atlas sinalizou migração para o concorrente se a entrega não sair "até fim do trimestre" — a referência de tempo desta fala **não** é a data de entrega (ver RES-08) | Marcos | `[09:00]` | "A Atlas chegou a sugerir que se a gente não entregar isso até fim do trimestre, eles podem migrar pro nosso concorrente." |
 | RES-05 | Worker obrigatoriamente em processo separado da API (não mesma instância) | Diego | `[09:11]` | "o worker tem que rodar como processo separado, não dentro da mesma instância da API. Senão se a API reinicia, perde o worker." |
 | RES-06 | Revisão de segurança pela Sofia é bloqueante para deploy | Sofia | `[09:49]` | "Ok, só não esqueçam de me agendar pra revisão de segurança antes de subir." |
 | RES-07 | customer_id NÃO deve vir do JWT (JWT é de usuário operador, não de cliente); deve vir no body ou path | Larissa | `[09:32]` | "Então é endpoint autenticado normal, e o customer_id é passado no body ou no path. Não vem do JWT." |
+| RES-08 | Data-alvo de entrega: fim de novembro, pedida pela Atlas — é a única data concreta da reunião, e é diferente do "fim do trimestre" de RES-04 | Marcos | `[09:45]` | "A Atlas quer pra fim de novembro. Larissa, dá em quantos sprints?" |
 
 ---
 
@@ -129,7 +130,7 @@
 | ABE-02(?) | Nome exato do arquivo de lógica do worker dentro do módulo: webhook.worker.ts OU webhook.processor.ts — Bruno apresentou as duas opções com "ou", Diego disse "Beleza" sem escolher entre elas | Bruno | `[09:28]` | "a lógica de processamento fica num arquivo dentro do módulo, tipo src/modules/webhooks/webhook.worker.ts ou webhook.processor.ts." |
 | ABE-03(?) | Localização do customer_id na requisição: body OU path — Larissa disse "body ou path" sem especificar qual; ninguém confirmou | Larissa | `[09:32]` | "Então é endpoint autenticado normal, e o customer_id é passado no body ou no path. Não vem do JWT." |
 | ABE-04 | Schema de armazenamento do histórico de entregas para GET /webhooks/:id/deliveries — Marcos listou campos desejados (sucesso/falha, payload, response, tempo de resposta), mas nenhuma tabela ou estrutura foi projetada na reunião | Marcos | `[09:34]` | "esses são os últimos 100 webhooks que vocês mandaram pra mim, sucesso/falha, payload, response, tempo de resposta" |
-| ABE-05 | Confirmação do prazo com os clientes (Atlas, MaxDistribuição, Nova Cargo) — Marcos prometeu confirmar "hoje à tarde" mas o resultado não voltou na reunião | Marcos | `[09:47]` | "Tá bom. Eu atualizo os clientes hoje à tarde." |
+| ABE-05 | Confirmação do prazo com os clientes (Atlas, MaxDistribuição, Nova Cargo) — Marcos prometeu confirmar "hoje à tarde" mas o resultado não voltou na reunião. A promessa aparece duas vezes: primeiro como intenção em `[09:47]` ("Atlas vai gostar. Eu confirmo prazo com eles"), depois com a citação literal abaixo | Marcos | `[09:49]` | "Tá bom. Eu atualizo os clientes hoje à tarde." |
 
 ---
 
@@ -140,9 +141,9 @@
 | COD-01 | Tabela `orders` — atualizada dentro da transação de changeStatus | Bruno | `[09:04]` | "A transação de mudança de status hoje já é pesada — atualiza orders, insere na order_status_history, decrementa stock_quantity dos produtos do pedido." |
 | COD-02 | Tabela `order_status_history` — insert dentro da transação de changeStatus | Bruno | `[09:04]` | "A transação de mudança de status hoje já é pesada — atualiza orders, insere na order_status_history, decrementa stock_quantity dos produtos do pedido." |
 | COD-03 | Campo `stock_quantity` dos produtos do pedido — decrementado dentro da transação de changeStatus | Bruno | `[09:04]` | "A transação de mudança de status hoje já é pesada — atualiza orders, insere na order_status_history, decrementa stock_quantity dos produtos do pedido." |
-| COD-04 | Classe `AppError` — padrão de erros de domínio a ser reutilizado pelo módulo de webhooks | Bruno | `[09:29]` | "a gente já tem um padrão. Tem classe AppError, classes específicas tipo InsufficientStockError, InvalidStatusTransitionError. Todas usam código tipo INSUFFICIENT_STOCK, INVALID_STATUS_TRANSITION." |
-| COD-05 | Classe `InsufficientStockError` — exemplo de especialização de AppError no projeto | Bruno | `[09:29]` | "classes específicas tipo InsufficientStockError, InvalidStatusTransitionError" |
-| COD-06 | Classe `InvalidStatusTransitionError` — exemplo de especialização de AppError no projeto | Bruno | `[09:29]` | "classes específicas tipo InsufficientStockError, InvalidStatusTransitionError" |
+| COD-04 | Classe `AppError` — padrão de erros de domínio a ser reutilizado pelo módulo de webhooks | Bruno | `[09:28]` | "a gente já tem um padrão. Tem classe AppError, classes específicas tipo InsufficientStockError, InvalidStatusTransitionError. Todas usam código tipo INSUFFICIENT_STOCK, INVALID_STATUS_TRANSITION." |
+| COD-05 | Classe `InsufficientStockError` — exemplo de especialização de AppError no projeto | Bruno | `[09:28]` | "classes específicas tipo InsufficientStockError, InvalidStatusTransitionError" |
+| COD-06 | Classe `InvalidStatusTransitionError` — exemplo de especialização de AppError no projeto | Bruno | `[09:28]` | "classes específicas tipo InsufficientStockError, InvalidStatusTransitionError" |
 | COD-07 | Logger `Pino` — já integrado no projeto inteiro; será reutilizado sem alteração | Bruno | `[09:29]` | "o logger, que é Pino, já tá no projeto inteiro. Não vamos botar nada novo." |
 | COD-08 | Middleware centralizado de erro — já trata AppError, Zod e Prisma; não precisará de alteração | Bruno | `[09:29]` | "O middleware de erro centralizado já trata AppError, Zod e Prisma. Vai pegar nossos erros sem precisar mudar nada." |
 | COD-09 | `requireRole` — middleware existente de autorização por role a ser reutilizado no endpoint de replay | Larissa | `[09:36]` | "Decidido, role ADMIN obrigatório no replay e a gente reaproveita o requireRole que já existe." |
@@ -151,7 +152,7 @@
 | COD-12 | `PrismaClient` — pool de conexão compartilhado por processo; worker instancia um novo client (mesmo banco) | Bruno | `[09:30]` | "Separado. PrismaClient é por processo. Mesmo banco, mesma DATABASE_URL, mas instância nova porque é outro processo Node." |
 | COD-13 | `OrderService.changeStatus` — método onde a inserção na webhook_outbox será adicionada dentro da transação | Bruno | `[09:40]` | "a alteração crítica é dentro do service de orders, no método changeStatus." |
 | COD-14 | Função `publishWebhookEvent(tx, order, fromStatus, toStatus)` — nova função a ser criada, recebe o tx client da transação; invocada pelo OrderService | Bruno | `[09:41]` | "Vou propor uma função publishWebhookEvent(tx, order, fromStatus, toStatus) que aceita o tx client da transação atual. Aí o order.service chama isso." |
-| COD-15 | Esquema de códigos de erro com prefixo por domínio (ex.: INSUFFICIENT_STOCK) — padrão a replicar com prefixo WEBHOOK_ | Bruno | `[09:29]` | "Quero seguir igual pra webhook. Códigos tipo WEBHOOK_NOT_FOUND, WEBHOOK_INVALID_URL, WEBHOOK_SECRET_REQUIRED, etc." |
+| COD-15 | Esquema de códigos de erro com prefixo por domínio (ex.: INSUFFICIENT_STOCK) — padrão a replicar com prefixo WEBHOOK_ | Bruno | `[09:28]` | "Quero seguir igual pra webhook. Códigos tipo WEBHOOK_NOT_FOUND, WEBHOOK_INVALID_URL, WEBHOOK_SECRET_REQUIRED, etc." |
 | COD-16 | `DATABASE_URL` — variável de ambiente usada pelo Prisma; a mesma será usada pelo worker | Bruno | `[09:30]` | "Mesmo banco, mesma DATABASE_URL, mas instância nova porque é outro processo Node." |
 
 ---
@@ -175,7 +176,7 @@
 | TEC-13 | Tabela de configuração de webhook com campos: url, secret, customer_id, estado ativo | Bruno | `[09:21]` | "Então a tabela de configuração de webhook armazena url + secret + customer_id + estado ativo?" |
 | TEC-14 | Secret gerada pelo sistema (não fornecida pelo cliente) e devolvida na resposta de criação | Marcos | `[09:31]` | "secret é gerada pela gente e devolvida na criação." |
 | TEC-15 | Filtro de eventos (lista de status por webhook) armazenado por endpoint, aplicado na inserção na outbox | Marcos | `[09:33]` | "Filtro de eventos é uma lista dos status que o webhook quer ouvir... e a gente filtra na hora de inserir na outbox." |
-| TEC-16 | Códigos de erro com prefixo `WEBHOOK_`: WEBHOOK_NOT_FOUND, WEBHOOK_INVALID_URL, WEBHOOK_SECRET_REQUIRED (exemplos) | Bruno | `[09:29]` | "Códigos tipo WEBHOOK_NOT_FOUND, WEBHOOK_INVALID_URL, WEBHOOK_SECRET_REQUIRED, etc." |
+| TEC-16 | Códigos de erro com prefixo `WEBHOOK_`: WEBHOOK_NOT_FOUND, WEBHOOK_INVALID_URL, WEBHOOK_SECRET_REQUIRED (exemplos) | Bruno | `[09:28]` | "Códigos tipo WEBHOOK_NOT_FOUND, WEBHOOK_INVALID_URL, WEBHOOK_SECRET_REQUIRED, etc." |
 | TEC-17 | Campos do payload do evento: event_id, event_type ("order.status_changed"), timestamp ISO 8601, order_id, order_number, from_status, to_status, customer_id, total_cents | Diego | `[09:43]` | "JSON com event_id, event_type tipo 'order.status_changed', timestamp ISO 8601, order_id, order_number, from_status, to_status, customer_id, e os campos básicos da order tipo total_cents." |
 | TEC-18 | event_type fixo: `"order.status_changed"` | Diego | `[09:43]` | "event_type tipo 'order.status_changed'" |
 | TEC-19 | Timestamp do payload em formato ISO 8601 | Diego | `[09:43]` | "timestamp ISO 8601" |
@@ -202,7 +203,7 @@
 
 ### (b) Promessas de confirmação que não retornaram na reunião
 
-1. **Confirmação do prazo com os clientes** (`[09:47]` Marcos: "Eu atualizo os clientes hoje à tarde."): Marcos prometeu confirmar o prazo de três sprints com Atlas Comercial, MaxDistribuição e Nova Cargo, mas o resultado desta confirmação não está na reunião.
+1. **Confirmação do prazo com os clientes** (`[09:49]` Marcos: "Tá bom. Eu atualizo os clientes hoje à tarde."; a mesma promessa já aparecia em `[09:47]`: "Atlas vai gostar. Eu confirmo prazo com eles."): Marcos prometeu confirmar o prazo de três sprints com Atlas Comercial, MaxDistribuição e Nova Cargo, mas o resultado desta confirmação não está na reunião.
 
 2. **Agendamento da sessão de revisão de design** (`[09:50]` Larissa: "Eu vou abrir o doc de design da feature e marcar uma sessão pro Bruno e o Diego revisarem comigo antes da gente começar a codar."): Larissa prometeu abrir o documento e agendar sessão de revisão, sem data ou prazo informados.
 
@@ -217,3 +218,13 @@
 3. **TEC-24 — Semântica exata do "5 tentativas"**: Diego diz "Eu sugiro 5" (`[09:15]`) e Larissa fecha "Decidido: 5 tentativas" (`[09:17]`). Não foi especificado se as 5 contam o envio inicial ou são 5 retentativas após a primeira falha. A progressão de backoff tem 5 intervalos (1m/5m/30m/2h/12h), sugerindo 5 retentativas (não incluindo o envio inicial), mas isso não foi dito explicitamente.
 
 4. **DEC-10 / at-least-once e responsabilidade do cliente**: Diego apresentou a posição (`[09:25]`), Sofia registrou preocupação ("Isso joga responsabilidade pro cliente"), Diego respondeu com argumento de mercado (`[09:25]`), e Marcos disse que documentaria no portal (`[09:26]`). Larissa fechou como "Decisão" (`[09:26]`). A concordância da Sofia com a decisão final não foi expressa — ela registrou preocupação mas não disse "ok" explicitamente.
+
+### (d) Correções aplicadas a este índice
+
+Este arquivo é artefato derivado, e a varredura de rastreabilidade registrada em [`docs/TRACKER.md` §5](../../docs/TRACKER.md#5-achados-da-varredura) encontrou três defeitos de carimbo nele. **Os três foram corrigidos aqui, e o registro do que mudou fica abaixo** — a transcrição em si não foi tocada.
+
+| Achado | O que estava | O que ficou |
+|---|---|---|
+| A-01 | `COD-04`, `COD-05`, `COD-06`, `COD-15` e `TEC-16` citavam `[09:29]` | `[09:28]`, que é onde a fala de Bruno sobre `AppError` e os códigos `WEBHOOK_*` realmente está. `COD-07` e `COD-08` seguem em `[09:29]` |
+| A-02 | `ABE-05` e a nota (b)-1 citavam `[09:47]` com a frase "Tá bom. Eu atualizo os clientes hoje à tarde" | `[09:49]`, que é onde a frase está; as duas linhas passaram a nomear também a fala de `[09:47]`, que sustenta o mesmo fato |
+| A-03 | `RES-04` resumia "entrega até fim de novembro" citando a fala de `[09:00]`, que diz "fim do trimestre" | duas linhas: `RES-04` (a pressão comercial de `[09:00]`) e `RES-08` (a data-alvo de `[09:45]`). **O índice passou de 112 para 113 itens** |

@@ -66,7 +66,7 @@ E o raio de comprometimento: "cada endpoint de webhook do cliente tem que ter um
 
 ## Fontes
 
-**Índice da transcrição:** DEC-08, DEC-09, DEC-13 · RF-01, RF-07, RF-09 · RNF-07, RNF-09, RNF-10 · RES-04, RES-06 · TEC-06, TEC-10, TEC-11, TEC-13, TEC-14, TEC-26.
+**Índice da transcrição** — enumeração literal dos IDs citados no corpo deste ADR: DEC-08, DEC-09, DEC-13 · RF-01, RF-07, RF-09 · RNF-07, RNF-09, RNF-10 · RES-04, RES-06 · TEC-05, TEC-06, TEC-07, TEC-10, TEC-11, TEC-13, TEC-14, TEC-26.
 
 **Arquivos reais:** `src/middlewares/validate.middleware.ts` (`validate`), `src/modules/orders/order.schemas.ts` (padrão de schema Zod), `src/shared/logger/index.ts` (`logger`, lista de `redact`), `src/config/env.ts` (`envSchema`).
 
