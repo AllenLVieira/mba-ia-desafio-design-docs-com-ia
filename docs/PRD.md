@@ -13,7 +13,7 @@
 
 > **Este documento opera em altura de produto.** Ele responde *por que* e *o quê*. Não repete a arquitetura da [RFC](RFC.md), não redecide o que virou ADR e não importa nada da especificação de implementação do [FDD](FDD.md). Onde o *como* importa, há um link para o documento que o carrega.
 >
-> **O ledger de 21 propostas sem origem do FDD não gera requisito aqui.** São escolhas de implementação em revisão; requisito de produto sai de `RF`/`RNF` do índice da transcrição.
+> **O registro de derivações e aprovações do FDD não gera requisito aqui.** São escolhas de implementação — 13 derivadas de itens de fonte, 8 pendentes de aprovação nomeada; requisito de produto sai de `RF`/`RNF` do índice da transcrição.
 
 ### Convenção de rastreabilidade — aplicada em duas seções
 
@@ -23,7 +23,7 @@ O FDD marca **F** / **D** / **P** em todo o texto. Aqui a marca aparece **apenas
 |---|---|
 | **F** | **Fonte direta** — item do índice da transcrição (`DEC`/`RF`/`RNF`/`RES`/`TEC`/`ALT`/`ADI`/`ABE`) ou arquivo real do repositório |
 | **D** | **Derivado** — consequência necessária de uma fonte (aritmética, ou implicação de uma decisão) |
-| **P** | **Proposta deste PRD, sem origem** — ninguém decidiu; está aberta a revisão |
+| **P** | **Proposta deste PRD** — ninguém decidiu. Toda linha **P** deste documento está consolidada na seção [13.1](#131-propostas-deste-prd-pendentes-de-aprovação) com **aprovador nomeado e o momento em que a decisão precisa sair**. Enquanto não for aprovada, **não é requisito, meta nem compromisso** |
 
 ---
 
@@ -35,7 +35,7 @@ A feature entrega **notificação ativa de mudança de status de pedido**: o cli
 
 O sistema **não tem nada disso hoje**. A varredura registrada em `CONTEXT.md` §16 procurou `webhook`, `event`, `queue`, `outbox`, `worker`, `retry`, `hmac`, `redis` e correlatos em `src/`, `prisma/` e `package.json`: zero ocorrências. A feature parte do zero.
 
-O prazo é externo e tem risco comercial associado: Marcos registrou que a Atlas sugeriu migrar para um concorrente se a entrega não sair (`RES-04`, `[09:00]`). O time fechou três sprints, com a revisão de segurança de Sofia incluída no fim (`DEC-13`, Larissa `[09:47]`).
+O prazo é externo e tem risco comercial associado: Marcos registrou que a Atlas sugeriu migrar para um concorrente se a entrega não sair (`RES-04`, `[09:00]`), e a data-alvo pedida é fim de novembro (`RES-08`, `[09:45]`). O time fechou três sprints, com a revisão de segurança de Sofia incluída no fim (`DEC-13`, Larissa `[09:47]`).
 
 **O que este documento não decide.** Duas promessas ao cliente estão em disputa aberta e o PRD as registra sem fechá-las: o alvo de latência de 10 segundos (seção 7, `RNF-01`) e a garantia at-least-once, cuja objeção de Sofia nunca foi retirada (seção 8, `DEC-10`).
 
@@ -63,9 +63,9 @@ Três consequências, todas na fala:
 
 O pedido é formal e tem nome: Atlas Comercial, MaxDistribuição e Nova Cargo (`TEC-29`, `[09:00]`). A Atlas anexou uma consequência: *"A Atlas chegou a sugerir que se a gente não entregar isso até fim do trimestre, eles podem migrar pro nosso concorrente"* (`RES-04`, Marcos `[09:00]`).
 
-**Duas datas diferentes circulam, e é preciso separar.** A fala de `[09:00]` diz "fim do trimestre". A data concreta — **fim de novembro** — é literal de Marcos em `[09:45]`, e é a que este documento adota como referência de prazo. A linha `RES-04` do índice funde as duas: resume "fim de novembro" citando `[09:00]`.
+**Duas datas diferentes circulam, e o índice de fontes agora as separa.** A fala de `[09:00]` diz "fim do trimestre" e é a pressão comercial (`RES-04`). A data concreta — **fim de novembro** — é literal de Marcos em `[09:45]` (*"A Atlas quer pra fim de novembro"*, `RES-08`), e é a que este documento adota como referência de prazo. Até a correção registrada no [TRACKER §5, A-03](TRACKER.md#5-achados-da-varredura), uma única linha do índice fundia as duas.
 
-**E o prazo não é compromisso confirmado.** Marcos assumiu atualizar os clientes: *"Eu atualizo os clientes hoje à tarde"* (`ABE-05`, `[09:47]`), e o resultado nunca voltou. Ninguém dos três clientes confirmou que fim de novembro serve. Ver risco R-02 e dependência D-04.
+**E o prazo não é compromisso confirmado.** Marcos assumiu atualizar os clientes: *"Eu atualizo os clientes hoje à tarde"* (`ABE-05`, `[09:49]`; a mesma promessa já havia aparecido em `[09:47]` como *"Eu confirmo prazo com eles"*), e o resultado nunca voltou. Ninguém dos três clientes confirmou que fim de novembro serve. Ver risco R-02 e dependência D-04.
 
 ### 2.3 Por que agora, e por que assim
 
@@ -113,11 +113,11 @@ Logo, **quem configura o webhook e quem recebe o `POST` são partes diferentes**
 | CU-07 | O cliente reclama que não recebeu um evento e quer evidência: consulta o histórico dos últimos 100 envios com sucesso/falha, payload, response e tempo de resposta | P1 consulta | `RF-06`, Marcos `[09:34]` |
 | CU-08 | O cliente precisa dos itens do pedido, que **não vão no payload**, e busca em `GET /orders/:id` depois | P2 | `ALT-08`, Diego `[09:43]` |
 | CU-09 | Auditoria: é preciso saber quem executou um reprocessamento e quando | P3 | `RF-10`, Sofia `[09:36]` |
-| CU-10 | A Atlas avalia migrar para o concorrente se a entrega não sair no prazo | contexto comercial | `RES-04` `[09:00]` + prazo `[09:45]` |
+| CU-10 | A Atlas avalia migrar para o concorrente se a entrega não sair no prazo | contexto comercial | `RES-04` `[09:00]` + `RES-08` `[09:45]` |
 
 ### 3.3 Cenários adicionais — **propostos, sem origem na reunião**
 
-Nenhum dos quatro abaixo foi levantado por ninguém. Estão aqui porque são jornadas previsíveis dos públicos acima, e a ausência deles na fonte é informação.
+Nenhum dos quatro abaixo foi levantado por ninguém. Estão aqui porque são jornadas previsíveis dos públicos acima, e a ausência deles na fonte é informação. **Os quatro entram como propostas pendentes de aprovação, não como cenários de escopo** — aprovador, prazo e consequência da rejeição estão em [13.1](#131-propostas-deste-prd-pendentes-de-aprovação) (P-07 a P-10).
 
 | # | Cenário proposto | Por que provavelmente aparece | Estado |
 |---|---|---|---|
@@ -149,7 +149,7 @@ Nenhum dos quatro abaixo foi levantado por ninguém. Estão aqui porque são jor
 
 ### 4.2 Métricas de produto — **propostas deste PRD, sem origem** (**P**)
 
-Nada abaixo foi decidido por ninguém. Cada linha traz o instrumento de medição, porque uma meta sem instrumento é só um número.
+Nada abaixo foi decidido por ninguém. Cada linha traz o instrumento de medição, porque uma meta sem instrumento é só um número — e **nenhuma delas é meta enquanto Marcos não aprovar**: cada uma está em [13.1](#131-propostas-deste-prd-pendentes-de-aprovação) (P-01 a P-06) com aprovador, prazo de decisão e o que se perde se for recusada.
 
 | # | Métrica proposta | Meta proposta | Como medir | Ressalva |
 |---|---|---|---|---|
@@ -324,7 +324,7 @@ Sofia aceitou como estado temporário: *"Por enquanto sim. Mais pra frente a gen
 | **D-01** | **Revisão de segurança de Sofia — bloqueante para deploy**, mínimo 2 dias úteis, foco em HMAC e geração de secret | interna, bloqueante | **sem data e sem responsável pelo agendamento.** Sofia pediu para ser agendada (`[09:49]`) e ninguém assumiu (nota de leitura (b)-3) | `RNF-10` / `RES-06` |
 | **D-02** | **Documentação da garantia at-least-once no portal do cliente** — a promessa de T-02 só funciona se o cliente souber que precisa deduplicar | interna, de produto | Marcos assumiu (`[09:26]`); **sem prazo e sem confirmação de execução** ([ADR-005](adrs/ADR-005-entrega-at-least-once-com-event-id.md)) | `[09:26]` |
 | **D-03** | **Sessão de revisão do documento de design** com Bruno e Diego, antes de começar a codar | interna | Larissa assumiu (`[09:50]`); **sem data** (nota (b)-2) | `[09:50]` |
-| **D-04** | **Confirmação do prazo com Atlas Comercial, MaxDistribuição e Nova Cargo** | externa | Marcos prometeu confirmar "hoje à tarde" (`[09:47]`); **o resultado nunca voltou** | `ABE-05` |
+| **D-04** | **Confirmação do prazo com Atlas Comercial, MaxDistribuição e Nova Cargo** | externa | Marcos prometeu confirmar "hoje à tarde" (`[09:49]`); **o resultado nunca voltou** | `ABE-05` |
 | **D-05** | **O cliente implementar a verificação da assinatura e a deduplicação por `X-Event-Id`** | externa, fora do nosso controle | não temos como verificar se ele faz — a garantia é contratual, não técnica | `RF-09` / `DEC-10` |
 | **D-06** | **Onde o processo de entrega roda, quem o mantém vivo e quem é avisado se ele cair** | interna, de plataforma | **não tratado por ninguém na reunião**; `docker-compose.yml` provisiona apenas o MySQL, sem serviço de aplicação onde declarar o processo | [ADR-002](adrs/ADR-002-worker-em-processo-separado-com-polling.md), ponto em aberto |
 | **D-07** | **Decisão sobre `RNF-01`** (seção 7.1) antes de o alvo de 10s ser comunicado a qualquer cliente | interna, de produto | **não decidida** | [RFC, questão 4](RFC.md#exigem-decisão-mas-não-travam-o-início) |
@@ -339,7 +339,7 @@ Sofia aceitou como estado temporário: *"Por enquanto sim. Mais pra frente a gen
 | # | Risco | Prob. | Impacto | Mitigação | Origem |
 |---|---|---|---|---|---|
 | **R-01** | **Churn da Atlas Comercial** se a entrega escorregar. O prazo tem revisão de segurança bloqueante de ≥2 dias úteis **no fim** de três sprints, e ninguém agendou essa revisão | Alta | **Alto** — perda de cliente nomeado | **Agendar a revisão de Sofia agora, não na sprint 3.** Tratar D-01 como item de cronograma, não de qualidade. Reportar progresso ao cliente antes do fim de novembro | `RES-04` / `DEC-13` / `RNF-10` |
-| **R-02** | **O prazo nunca foi confirmado com os três clientes.** "Fim de novembro" (`[09:45]`) é nossa data, não acordo deles; e a fala de `[09:00]` fala em "fim do trimestre" — duas referências diferentes circulando | Alta | Médio | Fechar D-04: Marcos confirma e registra a resposta dos três. **Até lá, não tratar fim de novembro como compromisso assumido** em nenhuma comunicação | `ABE-05` / `RES-04` |
+| **R-02** | **O prazo nunca foi confirmado com os três clientes.** "Fim de novembro" (`[09:45]`) é nossa data, não acordo deles; e a fala de `[09:00]` fala em "fim do trimestre" — duas referências diferentes circulando | Alta | Médio | Fechar D-04: Marcos confirma e registra a resposta dos três. **Até lá, não tratar fim de novembro como compromisso assumido** em nenhuma comunicação | `ABE-05` / `RES-04` / `RES-08` |
 | **R-03** | **Prometer "tempo real abaixo de 10 segundos" e não cumprir.** O desenho excede o alvo já no caminho sem retentativa (>12s) e chega a 14h36 no pior caso | Alta | Médio-Alto — quebra de expectativa no exato atributo que motivou o pedido | Resolver D-07 **antes** de qualquer material chegar ao cliente. Comunicar o alvo como caminho feliz, com o comportamento de exceção descrito | seção 7.1 · [RFC q4](RFC.md#exigem-decisão-mas-não-travam-o-início) |
 | **R-04** | **O cliente não deduplica e processa o mesmo pedido duas vezes.** Duplicata é garantida, não excepcional (T-02), e a única defesa é código do cliente | Alta | **Alto** — efeito colateral no negócio do cliente, e a objeção de Sofia nunca foi respondida | Fechar D-02 antes do go-live, com `X-Event-Id` em destaque no material de integração. **Reabrir a objeção de Sofia sobre `DEC-10` antes da revisão de segurança** | `DEC-10` · nota (c)-4 |
 | **R-05** | **Autorização frouxa entre clientes**: qualquer operador autenticado cadastra, edita e remove webhook de **qualquer** cliente, inclusive apontando a URL de um cliente para outro destino | Alta | **Alto** — exposição de dados entre clientes | Estado aceito como temporário por Sofia (`DEC-20`). **`ADI-06` é a saída e não tem gatilho** — definir o gatilho é ação de produto, não de engenharia | `DEC-20` / `ADI-06` |
@@ -399,9 +399,9 @@ Uma consequência de produto vale registrar: **o processo de entrega não roda v
 | V-04 | **Material de integração publicado no portal** cobrindo at-least-once, `X-Event-Id`, limitação de ordem e o alvo de latência decidido | AC-16; sem isso, T-02 é promessa unilateral | **pendente** (D-02) |
 | V-05 | **Decisões de produto pendentes fechadas**: `RNF-01` (D-07) e as duas perguntas nunca feitas (D-08) | comunicá-las depois do go-live é comunicar mudança de contrato | **pendentes** |
 
-### 12.3 Validação de produto — **proposta deste PRD, sem origem**
+### 12.3 Validação de produto — **proposta deste PRD, pendente de aprovação**
 
-Nada abaixo foi decidido na reunião. É a proposta de como saber se a feature funcionou de verdade, e não apenas se o código passou.
+Nada abaixo foi decidido na reunião. É a proposta de como saber se a feature funcionou de verdade, e não apenas se o código passou. **Diferente de 12.2, nada aqui é bloqueante por decisão de alguém** — as seis linhas estão em [13.1](#131-propostas-deste-prd-pendentes-de-aprovação) (P-11 a P-16) com aprovador e prazo. VP-01 é a única cuja janela de decisão **fecha sozinha no go-live**.
 
 | # | Proposta | Instrumento | Ressalva |
 |---|---|---|---|
@@ -431,11 +431,40 @@ Consolidação do que este documento **deliberadamente não fecha**, com o dono 
 | 9 | **Quem agenda a revisão de segurança, e para quando?** Ninguém assumiu | Larissa | D-01 · R-01 |
 | 10 | **Onde o processo de entrega roda e quem é avisado se ele cair?** | Diego | D-06 · R-06 |
 
+As dez questões acima nasceram na reunião: ou alguém as levantou e ninguém fechou, ou o confronto entre duas falas as criou. As dezesseis da seção seguinte são de outra natureza — **nasceram neste documento**.
+
+### 13.1 Propostas deste PRD, pendentes de aprovação
+
+**A reunião não produziu nenhuma métrica de produto, nenhum plano de validação e nenhum cenário além dos dez que a seção 3.2 rastreia.** As dezesseis linhas marcadas **P** neste documento existem porque um PRD sem métrica e sem plano de validação não é acionável — mas elas **não são informação com origem na fonte, e este documento não as apresenta como tal**. Cada uma está abaixo como **questão endereçada a um aprovador, com o momento em que a resposta precisa sair**. Enquanto a resposta não vier, **nenhuma delas é meta, requisito ou compromisso com cliente**, e nada no pacote depende delas.
+
+| # | Proposta | Onde está | Aprovador | Quando a decisão precisa sair | Se for rejeitada |
+|---|---|---|---|---|---|
+| P-01 | **Adoção: 3 de 3 clientes em 30 dias** (MP-01) | 4.2 | Marcos | antes do go-live | o objetivo OB-06 permanece qualitativo — os três nomes são fonte (`TEC-29`), o alvo temporal não |
+| P-02 | **Redução de polling ≥ 50% em 30 dias** (MP-02) | 4.2 | Marcos | **antes do go-live, obrigatoriamente** — depende de VP-01 | a feature fica sem métrica principal; a fala de `[09:00]` sobre "lenta e cara" continua qualitativa e não vira número |
+| P-03 | **Entrega na primeira tentativa ≥ 95%** (MP-03) | 4.2 | Marcos + Diego | antes do go-live | resta o volume de dead letter (P-04) como único sinal de saúde de entrega |
+| P-04 | **Volume de dead letter semanal com tendência decrescente** (MP-04) | 4.2 | Diego | antes do go-live | perde-se o gatilho de reavaliação de `ADI-01`, que Larissa condicionou a "medir o impacto" (`[09:37]`) |
+| P-05 | **Latência percebida p95 < 10s** (MP-05) | 4.2 | Marcos | **junto com a questão 1 desta seção** — herda o conflito de `RNF-01` | a métrica cai junto com o alvo; decidi-la antes de `RNF-01` seria decidir na ordem errada |
+| P-06 | **Churn evitado: Atlas retida** (MP-06) | 4.2 | Marcos | antes do go-live | o risco `RES-04` continua registrado como risco (R-01), apenas não vira métrica |
+| P-07 | **Cenário: troca de URL sem perder eventos em trânsito** (CU-P1) | 3.3 | Marcos + Larissa | revisão de design | `RF-02` continua existindo sem regra definida para eventos já enfileirados — a lacuna volta a ser silenciosa |
+| P-08 | **Cenário: adesão de um quarto cliente** (CU-P2) | 3.3 | Marcos | antes do go-live | nada quebra; o desenho não pressupõe apenas três clientes |
+| P-09 | **Cenário: teste de integração pelo cliente antes de produção** (CU-P3) | 3.3 | Marcos | antes do go-live | o cliente estreia direto em produção; não há endpoint de teste em escopo e nenhuma fonte pediu um |
+| P-10 | **Cenário: o cliente descobre sozinho que parou de receber** (CU-P4) | 3.3 | Marcos + Sofia | antes do go-live | R-08 permanece sem mitigação: sem `ADI-01` (email) e sem `ADI-03` (painel), a única via é `RF-06` |
+| P-11 | **Medir o baseline de polling antes do go-live** (VP-01) | 12.3 | Marcos | **antes do go-live — a janela fecha sozinha** | P-02 fica sem referência **para sempre**; é o único item desta tabela cuja rejeição é irreversível |
+| P-12 | **Piloto com um dos três clientes** (VP-02) | 12.3 | Marcos + Larissa | antes do go-live | o lançamento é para os três de uma vez; troca risco por velocidade, na direção oposta a P-01 |
+| P-13 | **Exercício de indisponibilidade com o cliente do piloto** (VP-03) | 12.3 | Marcos + Diego | depende de P-12 | CU-03 — o caso real que motivou `ALT-04` — nunca é verificado ponta a ponta com cliente real |
+| P-14 | **Verificar que o cliente do piloto deduplica** (VP-04) | 12.3 | Marcos + Sofia | depende de P-12 | R-04 continua em "não temos como saber", e a objeção de Sofia a `DEC-10` segue sem contraprova |
+| P-15 | **Acompanhamento das métricas por 30 dias após o go-live** (VP-05) | 12.3 | Marcos | antes do go-live | as métricas aprovadas em P-01 a P-06 ficam sem quem as leia — métrica sem leitor não é métrica |
+| P-16 | **Reavaliar `ADI-01` ao fim dos 30 dias** (VP-06) | 12.3 | Larissa + Marcos | antes do go-live | o gatilho da fala de `[09:37]` existe, mas sem data ninguém volta a ele |
+
+**Como ler esta tabela junto com a seção 12.2.** As validações V-01 a V-05 têm origem na reunião e são bloqueantes por decisão de alguém. Estas dezesseis não são bloqueantes por decisão de ninguém — **são bloqueantes apenas se aprovadas**. A diferença é deliberada e não deve ser apagada na hora de montar o plano de entrega.
+
 ---
 
 ## Fontes
 
-**Índice da transcrição** (`.scratch/fontes/transcricao-index.md`): DEC-01 a DEC-20 · RF-01 a RF-11 · RNF-01 a RNF-10 · RES-01 a RES-07 · ALT-01, ALT-02, ALT-04, ALT-07, ALT-08 · ADI-01 a ADI-06 · ABE-01, ABE-03, ABE-04, ABE-05 · COD-13 · TEC-08, TEC-11, TEC-14, TEC-15, TEC-22, TEC-24, TEC-28, TEC-29 · notas de leitura (a), (b)-1, (b)-2, (b)-3 e (c)-4.
+**Índice da transcrição** (`.scratch/fontes/transcricao-index.md`) — **enumeração literal: cada ID abaixo é citado no corpo deste documento**, e nenhum ID citado ficou de fora (63 IDs):
+
+DEC-02, DEC-04, DEC-05, DEC-06, DEC-07, DEC-10, DEC-11, DEC-12, DEC-13, DEC-16, DEC-18, DEC-20 · RF-01, RF-02, RF-03, RF-04, RF-05, RF-06, RF-07, RF-08, RF-09, RF-10, RF-11 · RNF-01, RNF-02, RNF-03, RNF-04, RNF-05, RNF-06, RNF-07, RNF-08, RNF-09, RNF-10 · RES-01, RES-03, RES-04, RES-06, RES-07, RES-08 · ALT-01, ALT-02, ALT-04, ALT-07, ALT-08 · ADI-01, ADI-02, ADI-03, ADI-04, ADI-05, ADI-06 · ABE-01, ABE-03, ABE-04, ABE-05 · COD-13 · TEC-08, TEC-11, TEC-14, TEC-15, TEC-22, TEC-24, TEC-28, TEC-29 · notas de leitura (a), (b)-1, (b)-2, (b)-3 e (c)-4.
 
 **Falas usadas que o índice não indexa como item próprio:** `[09:00]` Marcos (o baseline do polling em `GET /orders`, e "fim do trimestre") · `[09:45]` Marcos ("fim de novembro") · `[09:26]` Marcos (documentar a garantia no portal).
 

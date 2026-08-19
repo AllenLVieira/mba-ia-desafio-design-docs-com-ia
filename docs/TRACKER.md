@@ -4,9 +4,9 @@ Referência cruzada entre cada item registrado nos documentos do pacote e sua or
 
 ## Como ler
 
-- **Fonte `TRANSCRICAO`** — a **Localização** traz `[hh:mm] Nome` da fala que contém a citação que sustenta o item. **Todo timestamp desta tabela foi conferido diretamente em `TRANSCRICAO.md`**, não copiado do índice de fontes (`.scratch/fontes/transcricao-index.md`), que é artefato derivado e tem defeitos conhecidos — ver seção 5.
+- **Fonte `TRANSCRICAO`** — a **Localização** traz `[hh:mm] Nome` da fala que contém a citação que sustenta o item. **Todo timestamp desta tabela foi conferido diretamente em `TRANSCRICAO.md`**, não copiado do índice de fontes (`.scratch/fontes/transcricao-index.md`), que é artefato derivado. Foi essa conferência que expôs os três defeitos de carimbo do índice — hoje **corrigidos**, com o antes e o depois de cada um registrado na seção 5.
 - **Fonte `CODIGO`** — a **Localização** traz o caminho real do arquivo, e o símbolo ou a linha quando o item depende deles. Todos os caminhos foram verificados no repositório.
-- **Itens sem origem em fonte nenhuma** não recebem timestamp inventado: eles estão na **seção 3**, em tabela própria.
+- **Itens que os documentos acrescentaram** não recebem timestamp inventado: eles estão na **seção 3**, separados entre **derivação explícita** (com a cadeia que liga o item à fonte de que decorre) e **proposta pendente de aprovação** (com aprovador nomeado e prazo de decisão). Nenhum dos dois é apresentado como informação vinda da fonte.
 - Quando um item nasce do **confronto entre duas falas** (um conflito que ninguém levantou na reunião), a Localização traz a fala principal e o Conteúdo nomeia a outra.
 
 ## Índice
@@ -15,9 +15,9 @@ Referência cruzada entre cada item registrado nos documentos do pacote e sua or
 |---|---|
 | [1. Regra de contagem](#1-regra-de-contagem-e-denominador) | o que conta como item, e o denominador dos percentuais |
 | [2. Tabela de rastreabilidade](#2-tabela-de-rastreabilidade) | 234 itens com origem — PRD, RFC, FDD e ADRs |
-| [3. Itens sem origem](#3-itens-sem-origem-em-fonte-nenhuma) | 41 itens que os documentos propõem e ninguém decidiu |
-| [4. Varredura reversa](#4-varredura-reversa--cobertura-da-transcrição) | os 112 itens da reunião: onde cada um foi parar |
-| [5. Achados](#5-achados-da-varredura) | divergências encontradas, reportadas e **não corrigidas** |
+| [3. Derivações e aprovações](#3-itens-acrescentados-pelos-documentos-derivações-e-aprovações-pendentes) | os 41 itens que os documentos acrescentaram: 14 derivações com cadeia, 27 propostas com aprovador |
+| [4. Varredura reversa](#4-varredura-reversa--cobertura-da-transcrição) | os 113 itens da reunião: onde cada um foi parar |
+| [5. Achados](#5-achados-da-varredura) | divergências encontradas, **corrigidas**, com o antes e o depois de cada uma |
 | [6. Conformidade](#6-conformidade-com-os-critérios-de-aceite) | os números fechados contra os critérios do desafio |
 
 ---
@@ -35,12 +35,15 @@ Sem uma regra de contagem declarada, "80% dos itens identificáveis" é um perce
 | Itens rotulados varridos nos cinco documentos | **331** |
 | — dos quais **restatements** (definidos em outro documento do pacote) | 56 |
 | **Itens próprios, que exigem linha no tracker** | **275** |
-| Registrados na seção 2 (com origem em transcrição ou código) | 234 |
-| Registrados na seção 3 (sem origem em fonte nenhuma) | 41 |
+| Registrados na seção 2 (com origem direta em transcrição ou código) | 234 |
+| Registrados na seção 3.1 (derivação explícita, com cadeia até um item de fonte) | 14 |
+| Registrados na seção 3.2 (proposta pendente de aprovação, com aprovador nomeado) | 27 |
 | **Cobertura dos itens próprios** | **275 / 275 = 100%** |
 | **Cobertura de todos os itens rotulados** (incluindo restatements) | **275 / 331 = 83%** |
 
 Os dois percentuais estão acima do mínimo de 80%. O segundo é o mais conservador possível: trata cada repetição como se fosse item não rastreado.
+
+**Sobre os 41 da seção 3.** Nenhum deles é apresentado como informação com origem na fonte, e nenhum deles é requisito. Os **14 da 3.1** são rastreáveis pela cadeia que os liga ao item de que decorrem — a origem existe, é indireta, e está escrita. Os **27 da 3.2** são perguntas endereçadas a uma pessoa nomeada nos dois fóruns que a própria reunião criou: a revisão de segurança de Sofia (`RNF-10` `[09:46]`, bloqueante por `RES-06`) e a sessão de revisão de design que Larissa assumiu abrir (`[09:50]`). **Enquanto não aprovadas, não valem como requisito, meta ou compromisso** — e os documentos que as contêm dizem isso no ponto em que cada uma aparece, não só aqui.
 
 ---
 
@@ -394,82 +397,97 @@ Uma linha por decisão fechada. O identificador junta o ADR que a carrega e o it
 
 ---
 
-## 3. Itens sem origem em fonte nenhuma
+## 3. Itens acrescentados pelos documentos: derivações e aprovações pendentes
 
-Os documentos do pacote contêm 41 itens estruturantes que **não têm fala na reunião nem respaldo no código**. Eles não aparecem na tabela da seção 2 porque não há Localização honesta a preencher — e é exatamente por isso que precisam estar em algum lugar. Dar timestamp a qualquer um deles para engordar o percentual da seção 2 seria o defeito que este documento existe para impedir.
+Os documentos do pacote contêm **41 itens que não são citação de fala nem leitura de arquivo**. Eles não aparecem na tabela da seção 2 porque não há `[hh:mm] Nome` nem caminho de arquivo honesto a preencher — e dar timestamp a qualquer um deles para engordar o percentual da seção 2 seria exatamente o defeito que este documento existe para impedir.
 
-### 3.1 Ledger do FDD — 21 propostas de implementação
+**Registrar não basta.** Um item que apenas se declara "sem origem" continua sendo informação não rastreável dentro de um pacote que promete rastreabilidade integral. Por isso os 41 estão divididos abaixo em duas categorias, e **cada item pertence a uma delas**:
 
-Reproduzido de [FDD, "Premissas assumidas e derivações sem origem"](FDD.md#premissas-assumidas-e-derivações-sem-origem). O documento que as propõe é o único responsável por elas.
+| | O que é | Como fica rastreável | Quantos |
+|---|---|---|---|
+| **3.1 Derivação explícita** | consequência necessária de um item que **tem** origem | a coluna **Cadeia de derivação** liga o item ao `DEC`/`RF`/`RNF`/`TEC`/`COD` ou ao arquivo de onde ele decorre; a cadeia é conferível, e se estiver errada o item cai | **14** |
+| **3.2 Proposta pendente de aprovação** | escolha do documento, e nada mais | **não entra como informação**: entra como **questão endereçada a uma pessoa nomeada, no fórum que a própria reunião criou** — a revisão de segurança de Sofia (`RNF-10` `[09:46]`) ou a sessão de revisão de design de Larissa com Bruno e Diego (`[09:50]`). Enquanto não aprovada, não é requisito | **27** |
 
-| ID | Documento | Tipo | Conteúdo (resumo) | Autoria | O que quebra se for rejeitado |
+A distinção não é cosmética: uma derivação **já é rastreável hoje** — a origem é o item do qual ela decorre. Uma proposta **não é**, e a única forma honesta de mantê-la num pacote rastreável é mantê-la como pergunta com dono, não como afirmação.
+
+### 3.1 Derivações explícitas — 14 itens
+
+| ID | Documento | Tipo | Conteúdo (resumo) | Deriva de | Cadeia de derivação |
 |---|---|---|---|---|---|
-| FDD-P-01 | docs/FDD.md | Proposta | `attemptCount` e `nextAttemptAt` na outbox | FDD §5.3 | a política de retry deixa de ser executável |
-| FDD-P-02 | docs/FDD.md | Proposta | Tabela `webhook_deliveries` inteira | FDD §5.4 | `RF-06` deixa de ser implementável |
-| FDD-P-03 | docs/FDD.md | Proposta | `PENDING` cobre "aguardando retentativa"; `FAILED` é terminal | FDD §5.1 | a query de polling muda |
-| FDD-P-04 | docs/FDD.md | Proposta | Um `eventId` por assinatura, não por mudança de status | FDD §6.1 | a dedup do cliente descartaria a entrega do segundo endpoint |
-| FDD-P-05 | docs/FDD.md | Proposta | Duas assinaturas em `X-Signature` durante o grace period | FDD §8.2 | o grace period de 24h fica sem significado operacional |
-| FDD-P-06 | docs/FDD.md | Proposta | Formato `sha256=<hex>`, header único com vírgula | FDD §8.2 | o contrato de saída muda |
-| FDD-P-07 | docs/FDD.md | Proposta | Secret armazenada em claro, sem cifragem proposta | FDD §8.3 | decisão da revisão de segurança |
-| FDD-P-08 | docs/FDD.md | Proposta | Recuperação de linhas órfãs: shutdown gracioso + lease | FDD §6.5 | eventos somem em todo deploy do worker |
-| FDD-P-09 | docs/FDD.md | Proposta | Coluna `requestId` e sua propagação entre processos | FDD §5.3, §10.3 | não há correlação entre API e worker |
-| FDD-P-10 | docs/FDD.md | Proposta | Nomes dos eventos de log | FDD §10.1 | nada estrutural |
-| FDD-P-11 | docs/FDD.md | Proposta | Métricas como grandezas + query, sem exportador | FDD §10.2 | o alvo continua sem instrumentação |
-| FDD-P-12 | docs/FDD.md | Proposta | Teto no `responseBody` armazenado | FDD §5.4 | linha de tabela cresce com dado de terceiro |
-| FDD-P-13 | docs/FDD.md | Proposta | Janela de 100 + envelope paginado em `RF-06` | FDD §7.5 | a forma da resposta muda |
-| FDD-P-14 | docs/FDD.md | Proposta | 3xx tratado como falha, sem seguir redirect | FDD §6.2 | payload assinado poderia ir a host não cadastrado |
-| FDD-P-15 | docs/FDD.md | Proposta | `WEBHOOK_ROTATION_IN_PROGRESS` e `WEBHOOK_SUBSCRIPTION_IN_USE` | FDD §9.6.1 | dois caminhos ficam sem resposta definida |
-| FDD-P-16 | docs/FDD.md | Proposta | `WEBHOOK_SUBSCRIPTION_INACTIVE` como motivo de DLQ | FDD §6.6 | evento de assinatura desativada fica sem destino |
-| FDD-P-17 | docs/FDD.md | Proposta | `customerId` não editável no `PATCH` | FDD §7.3 | o histórico poderia trocar de dono |
-| FDD-P-18 | docs/FDD.md | Proposta | `WEBHOOK_POLL_BATCH_SIZE` = 20 e `WEBHOOK_PROCESSING_LEASE_MS` = 60000 | FDD §12.2 | ajuste de tuning |
-| FDD-P-19 | docs/FDD.md | Proposta | Nomes de tabela e dimensionamentos de coluna | FDD §5.2, §5.4 | nada estrutural |
-| FDD-P-20 | docs/FDD.md | Proposta | Script `worker:start` | FDD §11.2 | a reunião só nomeou um script |
-| FDD-P-21 | docs/FDD.md | Proposta | Prefixo `whsec_` na secret | FDD §7.1 | nada estrutural |
+| FDD-P-01 | docs/FDD.md §5.3 | Derivação | `attemptCount` e `nextAttemptAt` na outbox | `DEC-05` [09:17] · `TEC-03` [09:09] | intervalos fixados + worker em polling sem estado em memória ⇒ contagem e próximo instante têm de estar na linha |
+| FDD-P-03 | docs/FDD.md §5.1 | Derivação | `PENDING` cobre "aguardando retentativa"; `FAILED` é terminal | `TEC-01` [09:08] · `DEC-05` · `DEC-06` [09:18] | a fonte nomeia quatro estados e cria a espera entre tentativas ⇒ a espera cabe num dos quatro; `FAILED` é o que vai à DLQ |
+| FDD-P-04 | docs/FDD.md §6.1 | Derivação | Um `eventId` por assinatura, não por mudança de status | `DEC-16` [09:34] · `TEC-04` [09:25] · `DEC-10` [09:26] | filtragem na inserção ⇒ uma linha por assinatura; UUID gerado por linha ⇒ um `eventId` por linha; compartilhá-lo quebraria a dedup |
+| FDD-P-08 | docs/FDD.md §6.5 | Derivação | Recuperação de linhas órfãs em `PROCESSING` | `TEC-01` [09:08] · `DEC-03`/`RES-05` [09:11] | o estado "processando" existe e o worker é processo reiniciável ⇒ precisa de regra de saída no reinício. *O valor do lease está em 3.2* |
+| FDD-P-10 | docs/FDD.md §10.1 | Derivação | Nomes dos eventos de log | CÓDIGO · `COD-07` [09:29] | `src/middlewares/request-logger.middleware.ts` emite `http_request` em snake_case, e a fonte manda reusar o Pino sem padrão novo |
+| FDD-P-12 | docs/FDD.md §5.4 | Derivação | Teto no `responseBody` armazenado | `DEC-18` [09:24] | o princípio decidido — dado sem tamanho controlado ganha teto e erra, não trunca — aplicado ao único outro campo nessa condição |
+| FDD-P-13 | docs/FDD.md §7.5 | Derivação | Janela de 100 + envelope paginado em `RF-06` | `RF-06` [09:34] · CÓDIGO · `RES-03` [09:30] | os 100 são literais; o envelope é `paginated<T>` de `src/shared/http/response.ts` sob a regra de reuso |
+| FDD-P-14 | docs/FDD.md §6.2 | Derivação | 3xx tratado como falha, sem seguir redirect | `DEC-09`/`RNF-07` [09:23] · `DEC-08` [09:22] | a URL https cadastrada é a única autorizada e o corpo é assinado para ela ⇒ seguir redirect entregaria payload assinado a host não validado |
+| FDD-P-15 | docs/FDD.md §9.6.1 | Derivação | `WEBHOOK_ROTATION_IN_PROGRESS` e `WEBHOOK_SUBSCRIPTION_IN_USE` | `TEC-16` [09:28] · `TEC-11` [09:21] · `RF-03`/`RF-06` · CÓDIGO | o prefixo e o "etc." são fonte; os dois caminhos são criados pela fonte; `ConflictError` já aceita código próprio (`order.service.ts` linha 187) |
+| FDD-P-16 | docs/FDD.md §6.6 | Derivação | `WEBHOOK_SUBSCRIPTION_INACTIVE` como motivo de DLQ | `TEC-13` [09:21] · `DEC-06` [09:18] | a fonte cria o campo "estado ativo" e exige "motivo da falha" na DLQ ⇒ o motivo existe e não foi nomeado |
+| FDD-P-17 | docs/FDD.md §7.3 | Derivação | `customerId` não editável no `PATCH` | `RES-07` [09:32] · `RF-06` [09:34] | o `customerId` vem no request e o histórico é preso à assinatura ⇒ editá-lo faria o histórico trocar de dono |
+| FDD-P-19 | docs/FDD.md §5.2, §5.4 | Derivação | Nomes de tabela e dimensionamentos de coluna | `TEC-01` · `TEC-12` [09:18] · CÓDIGO | duas tabelas já vêm nomeadas em snake_case; `prisma/schema.prisma` mapeia todo model com `@@map` em snake_case plural |
+| FDD-P-20 | docs/FDD.md §11.2 | Derivação | Script `worker:start` | `TEC-20` [09:11] · CÓDIGO | a fonte decide o script `worker`; `package.json` já pareia `dev` com `start` ⇒ o par simétrico é convenção existente |
+| RFC-API-06 | docs/RFC.md · docs/FDD.md §7.6 | Derivação | Caminho `POST /api/v1/webhooks/:id/rotate-secret` | `RF-07` [09:21] · `TEC-22` [09:18] · CÓDIGO | o endpoint é decisão de Sofia; o prefixo vem de `src/app.ts`; a forma `POST /<recurso>/:id/<ação>` é a de `TEC-22`, literal da reunião. **Ratificação pendente — RFC, confirmação 13** |
 
-### 3.2 Caminho de endpoint proposto
+### 3.2 Propostas pendentes de aprovação — 27 itens
 
-| ID | Documento | Tipo | Conteúdo (resumo) | Autoria | Observação |
+Nenhuma linha abaixo é informação registrada: cada uma é **pergunta com dono e prazo**. A coluna **Aprovador** nomeia quem tem autoridade sobre o item, e o fórum onde ela existe é o que a reunião criou.
+
+#### 3.2.1 FDD — 8 propostas de implementação
+
+Espelho de [FDD, "Registro de derivações e de aprovações pendentes"](FDD.md#registro-de-derivações-e-de-aprovações-pendentes).
+
+| ID | Documento | Tipo | Conteúdo (resumo) | Aprovador e fórum | O que quebra se for rejeitada |
 |---|---|---|---|---|---|
-| RFC-API-06 | docs/RFC.md · docs/FDD.md §7.6 | Contrato | Caminho `POST /api/v1/webhooks/:id/rotate-secret` | RFC | Sofia especificou apenas "endpoint pro cliente conseguir pedir nova secret pela API" ([09:21]); o caminho é proposta. O **comportamento** tem fonte e está em `FDD-CONTRATO-06` |
+| FDD-P-02 | docs/FDD.md §5.4 | Proposta | Tabela `webhook_deliveries` inteira | Bruno e Diego — revisão de design [09:50] | é a resposta proposta a `ABE-04`, questão que a reunião deixou aberta; sem tabela, `RF-06` não é implementável |
+| FDD-P-05 | docs/FDD.md §8.2 | Proposta | Duas assinaturas em `X-Signature` durante o grace period | **Sofia** — revisão de segurança `RNF-10` | maior alcance do pacote: sem ela o grace period de 24h não tem significado operacional; com ela o contrato de saída muda para todos |
+| FDD-P-06 | docs/FDD.md §8.2 | Proposta | Formato `sha256=<hex>`, header único com vírgula | **Sofia** — revisão de segurança | o contrato de saída muda; decidir junto com `FDD-P-05` |
+| FDD-P-07 | docs/FDD.md §8.3 | Proposta | Secret armazenada em claro, sem cifragem | **Sofia** — revisão de segurança | é o objeto declarado da revisão ("HMAC e geração de secret", [09:46]); ninguém mais tem autoridade |
+| FDD-P-09 | docs/FDD.md §5.3, §10.3 | Proposta | Coluna `requestId` e sua propagação entre processos | Bruno e Diego — revisão de design | sem ela não há correlação entre a requisição da API e a entrega feita pelo worker |
+| FDD-P-11 | docs/FDD.md §10.2 | Proposta | Métricas como grandezas + query, sem exportador | Larissa e Diego — revisão de design | o alvo de `RNF-01` fica sem instrumentação e as métricas do PRD ficam sem fonte de dado |
+| FDD-P-18 | docs/FDD.md §12.2 | Proposta | `WEBHOOK_POLL_BATCH_SIZE` = 20 e `WEBHOOK_PROCESSING_LEASE_MS` = 60000 | Diego — revisão de design | `TEC-02` diz "batch pequeno" sem número; é tuning e nada mais depende deles |
+| FDD-P-21 | docs/FDD.md §7.1 | Proposta | Prefixo `whsec_` na secret | **Sofia** — revisão de segurança | nada estrutural; é formato do valor que ela já vai revisar |
 
-### 3.3 Métricas, cenários e validações propostos pelo PRD
+#### 3.2.2 PRD — 16 métricas, cenários e validações
 
-A reunião não produziu **nenhuma** métrica de produto: não há meta de adoção, KPI nem baseline. Tudo abaixo é proposta do PRD.
+A reunião **não produziu nenhuma métrica de produto**: não há meta de adoção, KPI nem baseline. Detalhe completo em [PRD §13.1](PRD.md#131-propostas-deste-prd-pendentes-de-aprovação).
 
-| ID | Documento | Tipo | Conteúdo (resumo) | Autoria | Observação |
+| ID | Documento | Tipo | Conteúdo (resumo) | Aprovador | Quando a decisão precisa sair |
 |---|---|---|---|---|---|
-| PRD-MP-01 | docs/PRD.md §4.2 | Métrica | Adoção: 3 de 3 clientes com endpoint ativo em 30 dias | PRD | o prazo de 30 dias é arbitrário |
-| PRD-MP-02 | docs/PRD.md §4.2 | Métrica | Redução de polling em `GET /orders` ≥ 50% em 30 dias | PRD | **o baseline não existe**; medi-lo antes do go-live é pré-requisito |
-| PRD-MP-03 | docs/PRD.md §4.2 | Métrica | Taxa de entrega na primeira tentativa ≥ 95% | PRD | número sem origem |
-| PRD-MP-04 | docs/PRD.md §4.2 | Métrica | Volume de dead letter por semana, com tendência decrescente | PRD | sem alvo absoluto |
-| PRD-MP-05 | docs/PRD.md §4.2 | Métrica | Latência percebida: p95 < 10s | PRD | herda o conflito de `RNF-01` |
-| PRD-MP-06 | docs/PRD.md §4.2 | Métrica | Churn evitado: Atlas Comercial retida | PRD | o risco tem fonte; transformá-lo em métrica é proposta |
-| PRD-CU-P1 | docs/PRD.md §3.3 | Cenário proposto | Cliente troca a URL sem perder eventos em trânsito | PRD | ninguém discutiu eventos enfileirados durante a troca |
-| PRD-CU-P2 | docs/PRD.md §3.3 | Cenário proposto | Um quarto cliente quer aderir | PRD | nada na fonte trata de expansão |
-| PRD-CU-P3 | docs/PRD.md §3.3 | Cenário proposto | Cliente quer testar a integração antes de produção | PRD | não há endpoint de teste em escopo |
-| PRD-CU-P4 | docs/PRD.md §3.3 | Cenário proposto | Cliente descobre sozinho que parou de receber | PRD | sem email e sem painel, a única via é consultar o histórico |
-| PRD-VP-01 | docs/PRD.md §12.3 | Validação proposta | Medir o baseline de polling antes do go-live | PRD | janela que fecha sozinha no go-live |
-| PRD-VP-02 | docs/PRD.md §12.3 | Validação proposta | Piloto com um dos três clientes | PRD | troca velocidade por risco |
-| PRD-VP-03 | docs/PRD.md §12.3 | Validação proposta | Exercício de indisponibilidade combinado com o cliente do piloto | PRD | exige cooperação do cliente |
-| PRD-VP-04 | docs/PRD.md §12.3 | Validação proposta | Verificar que o cliente do piloto realmente deduplica | PRD | não escala para todos |
-| PRD-VP-05 | docs/PRD.md §12.3 | Validação proposta | Acompanhamento das métricas nos 30 dias após o go-live | PRD | sem alarme, o acompanhamento é manual |
-| PRD-VP-06 | docs/PRD.md §12.3 | Validação proposta | Reavaliar o aviso por email ao fim dos 30 dias | PRD | o gatilho existe na fala; a data é proposta |
+| PRD-MP-01 | docs/PRD.md §4.2 | Métrica proposta | Adoção: 3 de 3 clientes com endpoint ativo em 30 dias | Marcos | antes do go-live |
+| PRD-MP-02 | docs/PRD.md §4.2 | Métrica proposta | Redução de polling em `GET /orders` ≥ 50% em 30 dias | Marcos | antes do go-live — **depende de `PRD-VP-01`** |
+| PRD-MP-03 | docs/PRD.md §4.2 | Métrica proposta | Taxa de entrega na primeira tentativa ≥ 95% | Marcos e Diego | antes do go-live |
+| PRD-MP-04 | docs/PRD.md §4.2 | Métrica proposta | Volume de dead letter por semana, com tendência decrescente | Diego | antes do go-live |
+| PRD-MP-05 | docs/PRD.md §4.2 | Métrica proposta | Latência percebida: p95 < 10s | Marcos | junto com `RNF-01`, cujo conflito ela herda |
+| PRD-MP-06 | docs/PRD.md §4.2 | Métrica proposta | Churn evitado: Atlas Comercial retida | Marcos | antes do go-live |
+| PRD-CU-P1 | docs/PRD.md §3.3 | Cenário proposto | Cliente troca a URL sem perder eventos em trânsito | Marcos e Larissa | revisão de design |
+| PRD-CU-P2 | docs/PRD.md §3.3 | Cenário proposto | Um quarto cliente quer aderir | Marcos | antes do go-live |
+| PRD-CU-P3 | docs/PRD.md §3.3 | Cenário proposto | Cliente quer testar a integração antes de produção | Marcos | antes do go-live |
+| PRD-CU-P4 | docs/PRD.md §3.3 | Cenário proposto | Cliente descobre sozinho que parou de receber | Marcos e Sofia | antes do go-live |
+| PRD-VP-01 | docs/PRD.md §12.3 | Validação proposta | Medir o baseline de polling antes do go-live | Marcos | **antes do go-live — a janela fecha sozinha e não reabre** |
+| PRD-VP-02 | docs/PRD.md §12.3 | Validação proposta | Piloto com um dos três clientes | Marcos e Larissa | antes do go-live |
+| PRD-VP-03 | docs/PRD.md §12.3 | Validação proposta | Exercício de indisponibilidade com o cliente do piloto | Marcos e Diego | depende de `PRD-VP-02` |
+| PRD-VP-04 | docs/PRD.md §12.3 | Validação proposta | Verificar que o cliente do piloto realmente deduplica | Marcos e Sofia | depende de `PRD-VP-02` |
+| PRD-VP-05 | docs/PRD.md §12.3 | Validação proposta | Acompanhamento das métricas nos 30 dias após o go-live | Marcos | antes do go-live |
+| PRD-VP-06 | docs/PRD.md §12.3 | Validação proposta | Reavaliar o aviso por email ao fim dos 30 dias | Larissa e Marcos | antes do go-live |
 
-### 3.4 Desambiguações feitas fora da reunião
+#### 3.2.3 Desambiguações feitas fora da reunião — 3
 
-Três itens em que a **pergunta** tem origem na transcrição e a **resposta** não: foram resolvidos no processo de produção dos documentos, e nenhum participante avalizou a escolha.
+Três itens em que a **pergunta** tem origem na transcrição e a **resposta** não. Foram resolvidos para que o FDD pudesse ser escrito; **quem escolheu foi o processo de produção do documento, não um participante**, e por isso estão aqui como ratificação pendente ([RFC, confirmações 13 a 15](RFC.md#desambiguações-feitas-fora-da-reunião--precisam-de-ratificação)).
 
-| ID | Documento | Tipo | Pergunta (com origem) | Resposta (sem origem) |
-|---|---|---|---|---|
-| RES-ABE-02 | docs/FDD.md §6.2 · ADR-002 | Desambiguação | Nome do arquivo de lógica do worker: `webhook.worker.ts` **ou** `webhook.processor.ts` — Bruno ofereceu as duas ([09:28]) | `webhook.worker.ts`, convivendo com `src/worker.ts` como entry point |
-| RES-ABE-03 | docs/FDD.md §7 · ADR-006 | Desambiguação | Onde trafega o `customer_id`: body **ou** path — Larissa não escolheu ([09:32]) | body no `POST`, query no `GET`, pela convenção real de `order.schemas.ts` |
-| RES-TEC-24 | docs/FDD.md §6.3 · ADR-003 | Desambiguação | "5 tentativas" inclui o envio inicial? Nunca foi dito ([09:15] / [09:17]) | cinco retentativas além do envio inicial, seis chamadas HTTP no total |
+| ID | Documento | Tipo | Pergunta (com origem) | Resposta adotada | Ratificação com |
+|---|---|---|---|---|---|
+| RES-ABE-02 | docs/FDD.md §6.2 · ADR-002 | Desambiguação | Nome do arquivo de lógica do worker: `webhook.worker.ts` **ou** `webhook.processor.ts` — Bruno ofereceu as duas ([09:28]) | `webhook.worker.ts`, convivendo com `src/worker.ts` como entry point | Bruno e Diego — revisão de design |
+| RES-ABE-03 | docs/FDD.md §7 · ADR-006 | Desambiguação | Onde trafega o `customer_id`: body **ou** path — Larissa não escolheu ([09:32]) | body no `POST`, query no `GET`, pela convenção real de `order.schemas.ts` | Larissa, Bruno e Marcos — revisão de design |
+| RES-TEC-24 | docs/FDD.md §6.3 · ADR-003 | Desambiguação | "5 tentativas" inclui o envio inicial? Nunca foi dito ([09:15] / [09:17]) | cinco retentativas além do envio inicial, seis chamadas HTTP no total | Diego e Larissa — **é a única das três que muda comportamento observável** |
 
 ---
 
 ## 4. Varredura reversa — cobertura da transcrição
 
-A direção inversa da seção 2: dos **112 itens** indexados na reunião, quais chegaram a algum documento. Sem isto, o tracker provaria apenas que o que foi escrito tem origem — não que o que foi dito não se perdeu.
+A direção inversa da seção 2: dos **113 itens** indexados na reunião, quais chegaram a algum documento. Sem isto, o tracker provaria apenas que o que foi escrito tem origem — não que o que foi dito não se perdeu.
+
+> O índice tinha 112 itens até a correção do achado A-03: a linha `RES-04` fundia duas falas de datas diferentes e foi separada em `RES-04` (a pressão comercial de `[09:00]`) e `RES-08` (a data-alvo de `[09:45]`). São 113 desde então.
 
 Método: busca literal pelo identificador de cada item nos cinco documentos do pacote.
 
@@ -478,13 +496,13 @@ Método: busca literal pelo identificador de cada item nos cinco documentos do p
 | `DEC` — decisões fechadas | 20 | 20 | **0** |
 | `RF` — requisitos funcionais | 11 | 11 | **0** |
 | `RNF` — requisitos não funcionais | 10 | 10 | **0** |
-| `RES` — restrições | 7 | 7 | **0** |
+| `RES` — restrições | 8 | 8 | **0** |
 | `ALT` — alternativas descartadas | 8 | 8 | **0** |
 | `ADI` — itens adiados | 6 | 6 | **0** |
 | `ABE` — questões em aberto | 5 | 5 | **0** |
 | `COD` — ganchos com o código | 16 | 16 | **0** |
 | `TEC` — detalhes técnicos secundários | 29 | 29 | **0** |
-| **Total** | **112** | **112** | **0** |
+| **Total** | **113** | **113** | **0** |
 
 **Nenhum item da reunião ficou de fora do pacote.** Os dois itens com cobertura mais rasa — presentes em um único documento — são `TEC-03` (polling de 2s como implementação, só em ADR-002) e `COD-15` (esquema de códigos de erro com prefixo por domínio, só em ADR-006). Ambos têm o conteúdo repetido sem o rótulo em outros documentos; a cobertura é real, o rótulo é que não viajou.
 
@@ -494,32 +512,49 @@ Método: busca literal pelo identificador de cada item nos cinco documentos do p
 
 ## 5. Achados da varredura
 
-Divergências encontradas ao conferir os documentos contra `TRANSCRICAO.md` e contra o repositório. **Nenhuma foi corrigida por esta passada** — uma auditoria que edita o que está auditando deixa de ser auditoria. A tabela da seção 2 usa os valores corretos; os documentos de origem seguem como estão, à espera de decisão.
+Divergências encontradas ao conferir os documentos contra `TRANSCRICAO.md` e contra o repositório.
+
+**Todas foram corrigidas.** A primeira versão desta seção as deixou registradas e intocadas, com o argumento de que uma auditoria que edita o que audita deixa de ser auditoria. O argumento estava errado na conclusão: **um defeito conhecido e não corrigido continua sendo um defeito na entrega** — o critério de consistência pede que nenhuma informação contradiga ou represente incorretamente a fonte, e um timestamp que aponta para a fala errada representa a fonte incorretamente, esteja ou não confessado. O que a auditoria não pode fazer é apagar o próprio rastro: por isso cada achado abaixo mantém **o que estava errado, onde estava, e o que ficou no lugar**, e a tabela de resumo fecha com o estado de cada um.
+
+`TRANSCRICAO.md` **não foi tocado** — é a fonte, e permanece como está.
 
 ### A-01 — Cinco linhas do índice apontam `[09:29]` para uma fala que é `[09:28]`
 
 `COD-04`, `COD-05`, `COD-06`, `COD-15` e `TEC-16` citam a fala de Bruno sobre `AppError`, `InsufficientStockError`, `InvalidStatusTransitionError` e os códigos `WEBHOOK_*`. Em `TRANSCRICAO.md` essa fala está em **`[09:28]`**; `[09:29]` é a fala seguinte, sobre o logger Pino e o middleware de erro (que é a origem correta de `COD-07` e `COD-08`).
 
-**Propagação:** o FDD herdou o timestamp errado em §9.6 ("`TEC-16` nomeia três códigos… Bruno `[09:29]`") e na ressalva 2, que argumenta que o código foi nomeado "dois minutos antes" de `TEC-14` — com o timestamp correto, são **três** minutos. O ADR-006 também cita `COD-04` e `COD-15` como `[09:29]`.
-**Severidade:** baixa. O falante, o conteúdo e a conclusão continuam corretos; erra o minuto.
+**Propagação:** o FDD herdou o timestamp errado em §9.6 ("`TEC-16` nomeia três códigos… Bruno `[09:29]`") e na ressalva 2, que argumentava que o código foi nomeado "dois minutos antes" de `TEC-14` — com o timestamp correto, são **três** minutos. O ADR-006 também citava `COD-04` e `COD-15` como `[09:29]`.
+
+**Corrigido.** As cinco linhas do índice passaram a `[09:28]`; o FDD §9.6 e a ressalva 2 idem, com "dois minutos" ajustado para "três minutos"; ADR-006 idem, nas duas citações. `COD-07` e `COD-08` **permanecem** em `[09:29]`, que é onde a fala do logger e do middleware realmente está.
+**Severidade:** baixa. O falante, o conteúdo e a conclusão sempre estiveram corretos; errava o minuto.
 
 ### A-02 — `ABE-05` cita `[09:47]` para uma frase dita em `[09:49]`
 
 A citação literal "Tá bom. Eu atualizo os clientes hoje à tarde" é de **`[09:49]` Marcos**. Em `[09:47]` Marcos diz outra coisa — "Atlas vai gostar. Eu confirmo prazo com eles" —, que sustenta o mesmo fato por outra via.
 
-**Propagação:** PRD §2.2 e a dependência `D-04` citam `[09:47]` com a frase de `[09:49]`; a nota de leitura (b)-1 do índice tem o mesmo defeito.
-**Severidade:** baixa. Duas falas diferentes registram a mesma promessa; o tracker usa `[09:49]`, que é onde a citação está.
+**Propagação:** PRD §2.2 e a dependência `D-04` citavam `[09:47]` com a frase de `[09:49]`; a nota de leitura (b)-1 do índice tinha o mesmo defeito.
+
+**Corrigido.** `ABE-05`, a nota (b)-1 do índice, o PRD §2.2 e `D-04` passaram a `[09:49]`, e os três lugares onde a promessa aparece por inteiro agora **nomeiam as duas falas**: a intenção de `[09:47]` e a citação literal de `[09:49]`. `DEC-13` **permanece** em `[09:47]`, que é onde Larissa fecha as três sprints.
+**Severidade:** baixa. Duas falas diferentes registram a mesma promessa; o carimbo é que apontava para a errada.
 
 ### A-03 — `RES-04` funde duas datas e cita a fala errada
 
-A linha `RES-04` do índice resume "entrega até **fim de novembro**" mas cita `[09:00]`, onde Marcos diz "fim do **trimestre**". "Fim de novembro" é literal de **`[09:45]` Marcos**.
+A linha `RES-04` do índice resumia "entrega até **fim de novembro**" mas citava `[09:00]`, onde Marcos diz "fim do **trimestre**". "Fim de novembro" é literal de **`[09:45]` Marcos**.
 
-**Propagação:** o PRD já **detectou e registrou** esta divergência em §2.2 e no risco `R-02`, adotando `[09:45]` como referência de prazo — este achado confirma a leitura do PRD contra a transcrição. RFC e ADR-004/006 citam `RES-04` genericamente, sem afirmar data.
-**Severidade:** média no índice, nula nos documentos — o único que precisava da data já separou as duas.
+**Propagação:** o PRD já **detectara e registrara** esta divergência em §2.2 e no risco `R-02`, adotando `[09:45]` como referência de prazo. RFC e ADR-004/006 citam `RES-04` genericamente, sem afirmar data.
 
-### A-04 — As seções "Fontes" declaram faixas de IDs que o corpo não cita
+**Corrigido — a linha virou duas, e o índice passou de 112 para 113 itens:**
 
-As três grandes peças fecham com listas em faixa contígua ("`COD-01 a COD-16`", "`TEC-01 a TEC-29`"). A varredura literal por identificador encontra IDs declarados que não aparecem no corpo do respectivo documento:
+| | Antes | Depois |
+|---|---|---|
+| `RES-04` | "Prazo externo: entrega até fim de novembro", citando `[09:00]` | **pressão comercial** — a ameaça de migração "até fim do trimestre", `[09:00]`, com a fala inteira como citação |
+| `RES-08` | não existia | **data-alvo de entrega** — "A Atlas quer pra fim de novembro", `[09:45]`, a única data concreta da reunião |
+
+As referências existentes a `RES-04` foram conferidas uma a uma: as que usam o item como **risco comercial** (FDD §1, RFC, ADR-004, ADR-006, PRD §2.2, R-01, MP-06) continuam corretas; as que precisavam da **data** (PRD §1, CU-10, R-02) passaram a citar `RES-08` ao lado.
+**Severidade:** média no índice, nula nos documentos — o único que precisava da data já separava as duas antes da correção.
+
+### A-04 — As seções "Fontes" declaravam faixas de IDs que o corpo não cita
+
+As três grandes peças fechavam com listas em faixa contígua ("`COD-01 a COD-16`", "`TEC-01 a TEC-29`"). A varredura literal por identificador encontrou IDs declarados que não aparecem no corpo do respectivo documento:
 
 | Documento | IDs declarados e não citados no corpo | Quais |
 |---|---|---|
@@ -527,13 +562,17 @@ As três grandes peças fecham com listas em faixa contígua ("`COD-01 a COD-16`
 | docs/RFC.md | 10 | `DEC-09`, `RF-09`, `RF-10`, `RNF-02`, `RNF-03`, `RNF-05`, `RNF-07`, `RNF-08`, `RNF-09`, `RES-02` |
 | docs/FDD.md | 14 | `DEC-13`, `RNF-03`, `RNF-07`, `RNF-08`, `RNF-09`, `RES-06`, `ALT-02`, `ALT-03`, `ALT-04`, `ALT-05`, `COD-02`, `COD-03`, `COD-15`, `TEC-03` |
 
-Em quase todos os casos o **conteúdo** está no documento sem o rótulo — o FDD trata de HTTPS obrigatório (`RNF-07`) e de ordem sob single-worker (`RNF-08`) longamente, só não usa os IDs. É over-declaração de bibliografia, não invenção no corpo.
-**Severidade:** baixa. Correção: trocar faixa por enumeração literal nas três seções "Fontes".
+Em quase todos os casos o **conteúdo** estava no documento sem o rótulo — o FDD trata de HTTPS obrigatório (`RNF-07`) e de ordem sob single-worker (`RNF-08`) longamente, só não usa os IDs. Era over-declaração de bibliografia, não invenção no corpo.
+
+**Corrigido, e o escopo da correção foi maior que o do achado.** As três seções "Fontes" passaram a trazer **enumeração literal** — 63 IDs no PRD, 73 na RFC, 94 no FDD —, e a mesma varredura foi então aplicada aos **sete ADRs**, que o achado original não cobria. Ela encontrou o mesmo defeito nos dois sentidos: 8 IDs declarados e não citados (ADR-001, ADR-002, ADR-006, ADR-007) e **10 IDs citados no corpo e ausentes da lista** (ADR-001, ADR-002, ADR-003, ADR-004, ADR-005, ADR-006) — este segundo caso é o mais grave dos dois, porque some com a origem em vez de inflá-la. As sete listas foram regeradas a partir do corpo. Verificação final nos dez documentos: **zero declarados-não-citados, zero citados-não-declarados, zero faixas.**
+**Severidade:** baixa nos documentos, mas a correção fechou uma lacuna de método — a lista de fontes agora é derivada do texto, não escrita à mão.
 
 ### A-05 — Um timestamp em faixa sobreviveu no ADR-002
 
-ADR-002, item 3 da Decisão, cita "(`DEC-02` / `TEC-03`, `[09:09]`–`[09:10]`)". Faixa não é timestamp válido no formato exigido; as duas falas existem separadamente — `[09:09]` Diego (a proposta de polling) e `[09:10]` Larissa (o fechamento).
-**Severidade:** baixa, e é o mesmo defeito de formato que já havia sido corrigido no índice.
+ADR-002, item 3 da Decisão, citava "(`DEC-02` / `TEC-03`, `[09:09]`–`[09:10]`)". Faixa não é timestamp válido no formato exigido; as duas falas existem separadamente — `[09:09]` Diego (a proposta de polling) e `[09:10]` Larissa (o fechamento).
+
+**Corrigido.** O item passou a nomear as duas falas com o papel de cada uma: Diego propõe em `[09:09]` (`TEC-03`), Larissa fecha em `[09:10]` (`DEC-02`) aceitando a latência mínima. Nenhuma faixa de timestamp resta em documento nenhum do pacote.
+**Severidade:** baixa, e era o mesmo defeito de formato que já havia sido corrigido no índice.
 
 ### A-06 — Nenhum caminho de arquivo inexistente citado como existente
 
@@ -545,16 +584,27 @@ Confirmadas também as três afirmações negativas mais fáceis de errar: `pack
 
 ### Resumo dos achados
 
-| # | Achado | Onde nasce | Severidade | Ação sugerida |
-|---|---|---|---|---|
-| A-01 | `[09:29]` no lugar de `[09:28]` em 5 itens | índice de fontes | Baixa | corrigir índice; ajustar "dois minutos" para "três" na ressalva 2 do FDD |
-| A-02 | `[09:47]` no lugar de `[09:49]` em `ABE-05` | índice de fontes | Baixa | corrigir índice, PRD §2.2 e `D-04` |
-| A-03 | `RES-04` funde duas datas | índice de fontes | Média | separar a linha do índice em duas |
-| A-04 | Faixas de ID declaradas e não citadas | PRD, RFC, FDD | Baixa | enumerar literalmente nas seções "Fontes" |
-| A-05 | Timestamp em faixa | ADR-002 | Baixa | usar `[09:09]` e `[09:10]` separados |
-| A-06 | — | — | — | nenhuma ação: caminhos e linhas conferem |
+| # | Achado | Onde nascia | Severidade | Estado | Arquivos alterados |
+|---|---|---|---|---|---|
+| A-01 | `[09:29]` no lugar de `[09:28]` em 5 itens | índice de fontes | Baixa | ✅ **corrigido** | `transcricao-index.md` (5 linhas) · `FDD.md` (§9.6 e ressalva 2) · `ADR-006` (2 citações) |
+| A-02 | `[09:47]` no lugar de `[09:49]` em `ABE-05` | índice de fontes | Baixa | ✅ **corrigido** | `transcricao-index.md` (`ABE-05`, nota (b)-1) · `PRD.md` (§2.2, `D-04`) |
+| A-03 | `RES-04` funde duas datas | índice de fontes | Média | ✅ **corrigido** — linha separada em `RES-04` + `RES-08` | `transcricao-index.md` · `PRD.md` (§1, §2.2, CU-10, R-02) |
+| A-04 | Faixas de ID declaradas e não citadas | PRD, RFC, FDD **e os 7 ADRs** | Baixa | ✅ **corrigido** — enumeração literal nos 10 documentos | `PRD.md` · `RFC.md` · `FDD.md` · `ADR-001` a `ADR-007` |
+| A-05 | Timestamp em faixa | ADR-002 | Baixa | ✅ **corrigido** | `ADR-002` |
+| A-06 | — | — | — | — | nenhuma ação: caminhos e linhas conferem |
 
-**Os três primeiros achados nascem no índice, não nos documentos** — e todos os três são do mesmo tipo: a citação literal está certa, o carimbo de origem é que escorregou. É a razão pela qual esta varredura conferiu cada timestamp na transcrição em vez de confiar no índice.
+**Os três primeiros achados nasciam no índice, não nos documentos** — e todos os três eram do mesmo tipo: a citação literal estava certa, o carimbo de origem é que escorregava. É a razão pela qual esta varredura conferiu cada timestamp na transcrição em vez de confiar no índice.
+
+**Verificação depois da correção**, refeita do zero sobre os arquivos corrigidos:
+
+| O que foi reconferido | Resultado |
+|---|---|
+| Ocorrências de `[09:29]` que restaram no pacote (fora do relato acima) | 5, **todas legítimas**: `COD-07` (logger Pino) e `COD-08` (middleware de erro) — a fala que realmente está em `[09:29]` |
+| Ocorrências de `[09:47]` que restaram no pacote (fora do relato acima) | 6, **todas legítimas**: 5 de `DEC-13` (Larissa fechando as três sprints) e 1 no PRD §2.2, que cita a fala de `[09:47]` **nomeando-a como tal**, ao lado da de `[09:49]` |
+| Faixas de timestamp (`[hh:mm]`–`[hh:mm]`) em qualquer documento | **0** |
+| IDs declarados nas seções "Fontes" e não citados no corpo (10 documentos) | **0** |
+| IDs citados no corpo e ausentes das seções "Fontes" (10 documentos) | **0** |
+| `TRANSCRICAO.md` alterado | **não** — a fonte não se corrige |
 
 ---
 
@@ -564,6 +614,8 @@ Confirmadas também as três afirmações negativas mais fáceis de errar: `pack
 |---|---|---|
 | Formato da tabela | `ID · Documento · Tipo · Conteúdo · Fonte · Localização` | ✅ seis colunas, em todas as tabelas da seção 2 |
 | Cobertura dos itens dos documentos | ≥ 80% | ✅ **100%** dos 275 itens próprios; **83%** contando os 56 restatements |
+| Nenhuma informação contradiz ou representa incorretamente a fonte | zero divergências abertas | ✅ os 5 achados da seção 5 foram **corrigidos**, não apenas reportados; reverificação sem sobras |
+| Itens acrescentados pelos documentos | rastreáveis ou endereçados | ✅ 14 derivações com cadeia até um item de fonte; 27 propostas com aprovador nomeado e prazo — **nenhuma apresentada como informação de origem, nenhuma valendo como requisito** |
 | Linhas com `Fonte = TRANSCRICAO` e timestamp `[hh:mm] Nome` | ≥ 70% | ✅ **208 de 234 = 88,9%** |
 | Linhas com `Fonte = CODIGO` e caminho real | ≥ 5 | ✅ **26 linhas**, cobrindo 14 arquivos distintos, todos verificados |
 | Timestamps válidos | formato `[hh:mm]`, sem faixas | ✅ 208 de 208; os 61 pares `[hh:mm] Nome` distintos foram conferidos contra `TRANSCRICAO.md` |
@@ -585,4 +637,4 @@ Confirmadas também as três afirmações negativas mais fáceis de errar: `pack
 
 ## Fontes deste documento
 
-`TRANSCRICAO.md` (fonte primária de todo timestamp) · `.scratch/fontes/transcricao-index.md` (índice dos 112 itens, usado como roteiro e auditado contra a transcrição) · [PRD](PRD.md) · [RFC](RFC.md) · [FDD](FDD.md) · [ADR-001](adrs/ADR-001-outbox-transacional-no-mysql.md) a [ADR-007](adrs/ADR-007-ordering-por-order-id-sob-single-worker.md) · repositório: os 27 caminhos existentes verificados em `src/`, `prisma/`, `tests/`, `package.json` e `docker-compose.yml`, mais os 4 declarados como arquivos a criar.
+`TRANSCRICAO.md` (fonte primária de todo timestamp, **não alterado**) · `.scratch/fontes/transcricao-index.md` (índice dos 113 itens, usado como roteiro, auditado contra a transcrição e corrigido — seção 5) · [PRD](PRD.md) · [RFC](RFC.md) · [FDD](FDD.md) · [ADR-001](adrs/ADR-001-outbox-transacional-no-mysql.md) a [ADR-007](adrs/ADR-007-ordering-por-order-id-sob-single-worker.md) · repositório: os 27 caminhos existentes verificados em `src/`, `prisma/`, `tests/`, `package.json` e `docker-compose.yml`, mais os 4 declarados como arquivos a criar.

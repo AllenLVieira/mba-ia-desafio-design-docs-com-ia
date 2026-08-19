@@ -62,10 +62,11 @@ depois pede revisão, um formato que **interroga antes de produzir**.
 
 Antes de escrever uma linha de documento, duas varreduras gravaram em disco a base factual:
 
-- **`.scratch/fontes/transcricao-index.md`** — 112 itens da reunião, cada um com citação
+- **`.scratch/fontes/transcricao-index.md`** — 113 itens da reunião, cada um com citação
   literal, falante e timestamp, classificados em nove baldes (20 decisões fechadas, 11
-  requisitos funcionais, 10 não funcionais, 7 restrições, 8 alternativas descartadas, 6 itens
-  adiados, 5 questões em aberto, 16 ganchos com o código, 29 detalhes técnicos).
+  requisitos funcionais, 10 não funcionais, 8 restrições, 8 alternativas descartadas, 6 itens
+  adiados, 5 questões em aberto, 16 ganchos com o código, 29 detalhes técnicos). Foram 112 até
+  a Fase 7, que separou em duas uma linha que fundia duas falas de datas diferentes.
 - **`CONTEXT.md`** — o mapa do código existente, com a máquina de estados do pedido, a
   assinatura real de `changeStatus`, a hierarquia de erros, e uma seção de pontos de extensão
   concretos onde a feature vai encostar.
@@ -75,7 +76,7 @@ inteiro**. A consequência prática apareceu no fim: o TRACKER deixou de ser tra
 arqueologia e virou uma junção contra um índice pronto, e qualquer linha que não fechasse com o
 índice era, por construção, alucinação.
 
-### As seis fases
+### As sete fases
 
 A ordem de produção segue a lógica de que decisão vem antes de proposta, e proposta antes de
 detalhe. **Não é a ordem de leitura** — ver [Como navegar a entrega](#como-navegar-a-entrega).
@@ -89,6 +90,10 @@ detalhe. **Não é a ordem de leitura** — ver [Como navegar a entrega](#como-n
 | **4** | PRD | **Roubo de altura** — resumir o FDD e entregar documento técnico com capa de produto |
 | **5** | TRACKER | **Alucinação legitimada** — o instrumento que carimba os outros cinco como verificados |
 | **6** | Este README | **Inflar a jornada** — narrar um processo mais limpo que o registro |
+| **7** | Correção dos achados e reclassificação dos itens propostos | **Defeito conhecido que fica** — auditar bem e entregar errado assim mesmo |
+
+A Fase 7 não estava no plano, e a razão de ela existir é a lição mais cara do processo: está
+descrita em [Fase 7 — o que eu errei ao só reportar](#fase-7--o-que-eu-errei-ao-só-reportar).
 
 Cada fase teve um prompt escrito para o seu risco, não um pedido genérico de documento. Os sete
 prompts, na íntegra, e o registro contemporâneo de cada ajuste estão em
@@ -112,9 +117,10 @@ que 11 decisões foram fechadas antes do primeiro ADR e 17 antes da primeira lin
 
 ## Prompts customizados
 
-Três dos sete, escolhidos por contraste. Juntos eles mostram uma progressão que nenhum par
+Quatro dos oito, escolhidos por contraste. Juntos eles mostram uma progressão que nenhum par
 mostra: o prompt deixa de pedir *documento* e passa a pedir *contenção de um modo de falha
-específico* — e o modo de falha muda a cada fase.
+específico* — e o modo de falha muda a cada fase. O quarto quebra o padrão de propósito: é o
+único escrito **contra o resultado de um prompt anterior**, e por isso é o que mais ensina.
 
 ### #1 — Extração indexada da transcrição (Fase 0)
 
@@ -358,6 +364,111 @@ pacote que contém, de propósito, 21 itens de ledger no FDD, 6 métricas propos
 desambiguações feitas fora da reunião. O caminho de menor resistência para bater a meta é dar
 timestamp a eles. Nomear cada um antes é o que impede isso.
 
+**E duas linhas deste mesmo prompt produziram os dois defeitos que a Fase 7 teve que
+consertar** — vale mais registrar isso do que o acerto:
+
+- *"Minha inclinação é só reportar"*, no fim da pergunta (c). Eu não perguntei, eu induzi. A
+  sessão adotou a inclinação e o pacote saiu com cinco defeitos conhecidos dentro.
+- *"itens deliberadamente sem origem, e eles não podem ganhar uma"*, no bloco de contexto.
+  A regra está certa — nenhum deles pode receber `[hh:mm]` — e é **incompleta**: ela proíbe o
+  destino errado sem exigir nenhum destino certo. Os 41 itens ficaram numa tabela de "sem
+  origem" e o trabalho parou ali.
+
+### #8 — A passada de correção que a Fase 5 não fez (Fase 7)
+
+Este é o prompt que teria evitado a Fase 7 se estivesse na Fase 5 — e, escrito depois, é o que
+a executou. Ele ataca as duas omissões acima de frente: **proíbe entregar defeito conhecido** e
+**exige destino, não só rótulo**, para todo item sem origem.
+
+```
+Passada de correção sobre o pacote fechado. Duas coisas estão erradas nele, e as
+duas são do mesmo tipo: eu confundi DECLARAR um problema com RESOLVÊ-LO.
+
+Problema 1 — os defeitos conhecidos ficaram na entrega.
+O TRACKER §5 lista cinco achados (A-01 a A-05) e não corrige nenhum, com o
+argumento de que "auditoria não edita o que audita". Esse argumento é verdadeiro
+sobre COMO AUDITAR e irrelevante sobre O QUE ENTREGAR. O critério de aceite não
+diz "nenhuma divergência não declarada"; diz que nenhuma informação registrada
+pode contradizer ou representar incorretamente a fonte. Um timestamp que aponta
+para a fala errada representa a fonte incorretamente esteja ou não confessado
+três seções abaixo.
+
+Problema 2 — os 41 itens "sem origem" continuam sem origem.
+Separá-los com honestidade não os torna rastreáveis, e a regra do desafio é que
+TODA informação registrada seja rastreável. A marca P impede alucinação
+silenciosa e não transforma proposta em informação originada na fonte.
+
+Tarefa 1: corrigir A-01 a A-05, e o rastro tem que sobreviver à correção.
+- Corrija na origem e em TODA propagação. Para cada achado, localize antes as
+  ocorrências: as do próprio defeito e as legítimas que compartilham o mesmo
+  valor. A-01 é [09:29] -> [09:28] em cinco itens, mas COD-07 e COD-08 estão
+  corretos em [09:29] e NÃO podem ser tocados. A-02 é [09:47] -> [09:49] em
+  ABE-05, mas DEC-13 está correto em [09:47]. Corrigir demais é o mesmo defeito
+  na direção oposta.
+- TRANSCRICAO.md não se toca. A fonte não se corrige.
+- Reescreva cada achado do TRACKER §5 preservando o QUE ESTAVA, o QUE FICOU e os
+  ARQUIVOS ALTERADOS. Apagar o achado junto com o defeito destrói a evidência de
+  que a auditoria funcionou.
+- A-04 foi levantado sobre PRD, RFC e FDD. Rode a mesma varredura nos 7 ADRs
+  antes de declarar o achado fechado, e nos DOIS sentidos: ID declarado na seção
+  Fontes e não citado no corpo, E ID citado no corpo e ausente da seção Fontes.
+  O segundo caso é o mais grave, porque some com a origem em vez de inflá-la.
+- Corrigir A-03 direito significa SEPARAR a linha do índice em duas, o que muda
+  a contagem de itens da reunião. Se mudar, varra todo lugar do repositório que
+  cita a contagem antiga.
+- Ao fim, reverifique do zero sobre os arquivos corrigidos e publique o
+  resultado da reverificação, não a intenção da correção.
+
+Tarefa 2: dar destino aos 41 itens, não apenas rótulo.
+Cada um passa a ser exatamente uma de duas coisas, e nenhum fica solto:
+
+(D) DERIVAÇÃO EXPLÍCITA — consequência necessária de um item que TEM origem.
+Escreva a CADEIA: item de fonte (com ID e timestamp, ou caminho de arquivo) ->
+passo lógico -> resultado. Uma derivação com a cadeia escrita é rastreável: a
+origem é indireta e conferível, e se a cadeia estiver errada o item cai junto.
+Cadeia de uma linha vaga ("decorre da arquitetura") não vale — se você não
+consegue nomear o item de origem, não é derivação.
+
+(A) PROPOSTA PENDENTE DE APROVAÇÃO — escolha do documento, e nada mais. Entra
+como PERGUNTA ENDEREÇADA, com: aprovador nomeado, fórum onde a decisão cabe,
+prazo, e o que se perde se for rejeitada. E o documento tem que dizer, no ponto
+em que a proposta aparece, que enquanto não aprovada ela NÃO É requisito, meta
+nem compromisso.
+
+Regra de corte, e ela é conservadora: para cada item, pergunte "se um
+participante da reunião lesse a cadeia, ele diria 'isso decorre do que eu
+decidi' ou 'isso é escolha de vocês'?". Só a primeira resposta vira D. Na
+dúvida, vai para A. Se a tabela de derivações sair maior que a de aprovações,
+você foi generoso demais — reveja.
+
+Restrição sobre os fóruns: NÃO invente instância de aprovação. Use apenas as que
+a reunião criou, e nomeie a fala que as criou. Se um item não couber em nenhuma
+delas, isso é o achado, não um convite para inventar um comitê.
+
+Comece me perguntando:
+
+(a) Onde mora a lista reclassificada. O FDD tem o ledger, o TRACKER tem a seção
+3, e os itens do PRD estão espalhados em três seções. Uma lista canônica com as
+outras apontando para ela, ou cada documento carrega a sua e o TRACKER
+consolida? Recomende uma e diga o que se duplica na outra.
+
+(b) O que acontece com a numeração existente. FDD-P-01 a FDD-P-21 estão citados
+em outros documentos. A reclassificação renumera (e obriga a varrer as
+referências) ou preserva os IDs e acrescenta a classificação como coluna?
+
+(c) O README e o registro de processo afirmam hoje, com todas as letras, que
+nenhum achado foi corrigido — é uma seção inteira defendendo a escolha. Reescrevo
+como se a escolha nunca tivesse existido, ou registro a mudança de posição com o
+argumento que a derrubou? Minha inclinação é a segunda, e quero que você discorde
+se achar que ela infla a narrativa.
+```
+
+Duas coisas nesse prompt vieram de erro anterior, não de sabedoria. A regra "corrigir demais é
+o mesmo defeito na direção oposta" existe porque a primeira tentativa de A-01 quase levou
+`COD-07` junto — o valor `[09:29]` aparece cinco vezes no pacote e só as erradas eram para
+mudar. E a pergunta (c) inverte deliberadamente o vício da pergunta (c) do prompt #7: em vez de
+declarar minha inclinação e recebê-la de volta validada, declaro e **peço discordância**.
+
 ---
 
 ## Iterações e ajustes
@@ -368,9 +479,12 @@ O enunciado pede o número de iterações principais e sugere esperar de 3 a 5 c
 geração → revisão → ajuste de prompt → nova geração. Dou dois números, com a regra explícita,
 porque nenhum sozinho descreve o que aconteceu:
 
-- **6 fases** de produção, cada uma com prompt próprio escrito para o seu modo de falha.
-- **8 ajustes** numerados no log — momentos em que algo saiu errado e uma regra mudou por causa
-  disso.
+- **7 fases** de produção, cada uma com prompt próprio escrito para o seu modo de falha — a
+  sétima não estava no plano e existe porque o pacote fechado tinha defeito conhecido dentro.
+- **9 ajustes** numerados no log — momentos em que algo saiu errado e uma regra mudou por causa
+  disso. O nono é o maior: **duas linhas do prompt da Fase 5 produziram os dois defeitos que a
+  Fase 7 teve que consertar**, e as duas eram do mesmo tipo — proibição sem obrigação ao lado,
+  e pergunta com a resposta anexada.
 
 O que os dois números escondem, e que precisa ser dito: **houve pouquíssima regeração**. Nenhum
 documento grande foi jogado fora e reescrito. Isso não é porque saiu certo de primeira — é
@@ -384,7 +498,7 @@ decidir custa mais atenção do que revisar. O ganho é que a decisão fica regi
 sobrevive à troca de sessão — enquanto a correção pós-geração vive só no documento e some do
 processo.
 
-### As quatro lições que os 8 ajustes produziram
+### As cinco lições que os 9 ajustes produziram
 
 **1. Contradição entre arquivos de instrução do próprio repositório é classe de defeito, não
 evento.** (Ajustes #1, #3, #6 — quatro ocorrências.) O setup gerou `docs/agents/domain.md`
@@ -428,7 +542,25 @@ nos documentos: `[09:29]` no lugar de `[09:28]` em cinco linhas, `[09:47]` no lu
 em outra, e a fusão de duas datas numa terceira. Em todos, a citação literal está certa e o
 carimbo de origem escorregou. O Ajuste #2 tinha ensinado metade disso — a IA inventa a variante
 plausível quando o dado não cabe. A outra metade é que **ela também herda o erro plausível
-quando o dado errado cabe perfeitamente**.
+quando o dado errado cabe perfeitamente**. Os três foram corrigidos na Fase 7, com o antes e o
+depois de cada um registrado na nota de leitura (d) do próprio índice.
+
+**5. Proibição sem obrigação ao lado produz um vazio que nada denuncia — e pergunta com a
+resposta anexada não é pergunta.** (Ajuste #9.) As duas falhas que a Fase 7 consertou nasceram
+de duas linhas do prompt da Fase 5, e nenhuma delas é descuido de execução: a sessão fez
+exatamente o que foi pedido.
+
+A primeira linha dizia que os itens sem origem "não podem ganhar uma". Correto, e **incompleto**
+— proíbe o destino errado (inventar `[hh:mm]`) sem exigir nenhum destino certo. Os 41 itens
+foram para uma tabela de "sem origem" e o trabalho parou ali, porque ali acabava a instrução.
+O vazio passou despercebido justamente porque nada no texto o apontava: o prompt foi cumprido
+à risca.
+
+A segunda fechava uma das perguntas de abertura com *"minha inclinação é só reportar"*. Eu não
+perguntei, induzi — e recebi minha própria inclinação de volta, agora com o peso de ter sido
+"decidida". O padrão "comece me perguntando" só vale enquanto a pergunta for aberta; anexar a
+resposta a converte num eco caro. O prompt #8 inverte isso de propósito: declara a inclinação e
+**pede discordância explícita**.
 
 ### Quatro achados concretos que a revisão produziu
 
@@ -465,14 +597,14 @@ numa linha. Somado a uma questão em aberto onde Marcos promete confirmar com os
 o resultado nunca volta, a conclusão é que **a data é nossa, não deles**. Nenhum documento
 técnico tinha motivo para notar isso.
 
-### Seis achados encontrados e nenhum corrigido
+### Seis achados encontrados — e a Fase 5 parou aí
 
-A Fase 5 é a única passada que lê os cinco documentos lado a lado, e a política que escolhi foi
-**reportar sem editar**: uma auditoria que conserta o que está auditando deixa de ser auditoria.
-O tracker fecha com seis achados abertos — os três erros de timestamp do índice (dois deles já
-propagados para o FDD e o PRD), seções "Fontes" que declaram faixas contíguas de IDs que o corpo
-não cita, e um timestamp em faixa que sobreviveu no ADR-002 porque foi escrito na Fase 1, **antes
-de o Ajuste #2 virar regra de prompt**.
+A Fase 5 é a única passada que lê os cinco documentos lado a lado, e a política que escolhi na
+hora foi **reportar sem editar**: uma auditoria que conserta o que está auditando deixa de ser
+auditoria. O tracker fechou com seis achados abertos — os três erros de timestamp do índice
+(dois deles já propagados para o FDD e o PRD), seções "Fontes" que declaram faixas contíguas de
+IDs que o corpo não cita, e um timestamp em faixa que sobreviveu no ADR-002 porque foi escrito
+na Fase 1, **antes de o Ajuste #2 virar regra de prompt**.
 
 Esse último tem forma própria e vale como procedimento: **correção aplicada à fonte não se
 propaga sozinha para o que já foi derivado dela.** Quando uma regra nova nasce no meio do
@@ -484,9 +616,51 @@ pacote, 27 existem e os 4 que não existem são nomeados pelos próprios documen
 a criar; os 17 números de linha do FDD conferem um a um; e as três afirmações negativas mais
 fáceis de errar também conferem.
 
-Deixar os seis abertos num documento que também serve de vitrine é contraintuitivo. A
-alternativa seria um README descrevendo um processo mais limpo do que o registro que ele mesmo
-linka — com o `TRACKER.md` no repositório, ao lado, denunciando.
+### Fase 7 — o que eu errei ao só reportar
+
+O argumento "auditoria não edita o que audita" está certo sobre **como auditar** e errado sobre
+**o que entregar**. Ele confunde dois papéis: quem audita não deve mexer no que está medindo
+*durante* a medição — mas a entrega não é a auditoria, é o pacote. E o critério de consistência
+do desafio não diz "nenhuma divergência não declarada": diz que **nenhuma informação registrada
+pode contradizer ou representar incorretamente a fonte**. Um timestamp que aponta para a fala
+errada representa a fonte incorretamente **esteja ou não confessado três seções abaixo**.
+Declarar um defeito é boa prática de auditoria; não é o mesmo que não ter o defeito.
+
+A mesma confusão aparecia no segundo ponto. Os documentos separavam, com honestidade, 41 itens
+"sem origem em fonte nenhuma" — e paravam aí. Mas a regra do desafio é que **toda informação
+registrada seja rastreável**, e um item que se declara não rastreável continua não rastreável.
+A marca **P** impedia alucinação silenciosa e não transformava proposta em informação de origem.
+
+A Fase 7 fez as duas coisas que faltavam:
+
+**1. Corrigi os cinco achados**, e o registro do que mudou ficou no lugar do achado — cada um
+com o que estava, o que ficou e os arquivos tocados ([TRACKER §5](docs/TRACKER.md#5-achados-da-varredura)).
+`TRANSCRICAO.md` não foi tocado: a fonte não se corrige. Duas coisas apareceram nessa passada
+que a Fase 5 não tinha visto. A primeira: o achado A-04 valia também para os **sete ADRs**, que
+a varredura original não cobria — e neles o defeito aparecia **nos dois sentidos**, incluindo 10
+IDs citados no corpo e **ausentes** da lista de fontes, que é o caso mais grave, porque some com
+a origem em vez de inflá-la. A segunda: corrigir A-03 direito significou **separar a linha em
+duas**, e o índice passou de 112 para 113 itens — uma correção de rastreabilidade que muda um
+denominador publicado obriga a mexer em todo lugar que cita o denominador.
+
+**2. Dei destino aos 41 itens acrescentados.** Cada um passou a ser uma de duas coisas, e
+nenhum ficou solto:
+
+- **14 derivações explícitas**, cada uma com a **cadeia** que a liga ao item de fonte de que
+  decorre — `attemptCount` decorre de `DEC-05` mais `TEC-03`, o envelope paginado decorre de
+  `RF-06` mais `response.ts` mais a regra de reuso, e assim por diante. Derivação com a cadeia
+  escrita **é** rastreável: a origem é indireta e conferível, e se a cadeia estiver errada o
+  item cai junto.
+- **27 propostas pendentes de aprovação**, cada uma endereçada a **uma pessoa nomeada, nos dois
+  fóruns que a própria reunião criou**: a revisão de segurança de Sofia (`RNF-10`, bloqueante
+  por `RES-06`) e a sessão de revisão de design que Larissa assumiu abrir (`[09:50]`). Elas
+  entram como **pergunta com dono e prazo**, não como afirmação — e os documentos dizem, no
+  ponto em que cada uma aparece, que **enquanto não aprovada não é requisito, meta nem
+  compromisso**.
+
+A lição que fecha o processo: **um pacote de documentação não é avaliado pela qualidade da sua
+consciência sobre si mesmo.** Saber onde está o defeito é o pré-requisito de corrigi-lo, não o
+substituto. O tracker fez o trabalho difícil — encontrar — e eu parei no passo fácil.
 
 ---
 
@@ -504,16 +678,17 @@ alta é fácil de ler e difícil de escrever primeiro; documento de altura baixa
 
 | Ler | Documento | Responde | Tamanho | Produzido |
 | --- | --- | --- | --- | --- |
-| 1º | [`docs/PRD.md`](docs/PRD.md) | Por quê e o quê? | 444 linhas | 5º |
-| 2º | [`docs/RFC.md`](docs/RFC.md) | Como pretendemos resolver, e o que segue em aberto? | 213 linhas | 3º |
+| 1º | [`docs/PRD.md`](docs/PRD.md) | Por quê e o quê? | 473 linhas | 5º |
+| 2º | [`docs/RFC.md`](docs/RFC.md) | Como pretendemos resolver, e o que segue em aberto? | 225 linhas | 3º |
 | 3º | [`docs/adrs/`](docs/adrs/) | Por que decidimos exatamente assim? | 7 ADRs, 69–92 linhas cada | 2º |
-| 4º | [`docs/FDD.md`](docs/FDD.md) | Como construir, em detalhe? | 1109 linhas | 4º |
-| 5º | [`docs/TRACKER.md`](docs/TRACKER.md) | De onde veio cada coisa? | 588 linhas | 6º |
+| 4º | [`docs/FDD.md`](docs/FDD.md) | Como construir, em detalhe? | 1123 linhas | 4º |
+| 5º | [`docs/TRACKER.md`](docs/TRACKER.md) | De onde veio cada coisa? | 640 linhas | 6º |
 
 Atalhos por interesse: quem quer **avaliar rastreabilidade** pode começar direto pelo TRACKER,
-que publica o próprio denominador e traz a varredura reversa. Quem vai **implementar** pode ir
-direto ao FDD e usar o ledger final de 21 itens como lista do que precisa ser confirmado antes
-de codar.
+que publica o próprio denominador, traz a varredura reversa e registra o antes/depois de cada
+correção. Quem vai **implementar** pode ir direto ao FDD e usar o registro final — 13 derivações
+com a cadeia até a fonte, 8 propostas com aprovador — como a lista do que precisa ser confirmado
+antes de codar; as 8 propostas são as que **não valem como requisito** até a aprovação sair.
 
 ### Fontes e material de trabalho
 
@@ -522,8 +697,8 @@ de codar.
 | [`TRANSCRICAO.md`](TRANSCRICAO.md) | Fonte primária. A reunião de 55 minutos, 5 participantes. Não alterado. |
 | [`CONTEXT.md`](CONTEXT.md) | Mapa do código existente produzido na Fase 0. Sustenta a seção "Integração com o sistema existente" do FDD. |
 | [`docs/DESAFIO.md`](docs/DESAFIO.md) | O enunciado original, preservado. É a régua contra a qual os números abaixo se leem. |
-| [`.scratch/fontes/transcricao-index.md`](.scratch/fontes/transcricao-index.md) | **Material de trabalho, não entregável.** O índice de 112 itens da transcrição. Base factual das Fases 1 a 4. |
-| [`.scratch/processo/prompts-e-iteracoes.md`](.scratch/processo/prompts-e-iteracoes.md) | **Material de trabalho, não entregável.** Registro contemporâneo do processo: os 7 prompts na íntegra, os 8 ajustes e as verificações de cada fase. É a fonte deste README. |
+| [`.scratch/fontes/transcricao-index.md`](.scratch/fontes/transcricao-index.md) | **Material de trabalho, não entregável.** O índice de 113 itens da transcrição (112 até a Fase 7 separar `RES-04` em dois). Base factual das Fases 1 a 4, e o arquivo que concentra os três defeitos de carimbo corrigidos na Fase 7 — a nota de leitura (d) registra o que mudou. |
+| [`.scratch/processo/prompts-e-iteracoes.md`](.scratch/processo/prompts-e-iteracoes.md) | **Material de trabalho, não entregável.** Registro contemporâneo do processo: os 8 prompts na íntegra, os 9 ajustes e as verificações de cada fase, incluindo a Fase 7 e a autópsia das duas linhas do prompt #7 que a tornaram necessária. É a fonte deste README. |
 
 Os dois arquivos em `.scratch/` estão versionados de propósito. Sem eles, este README seria uma
 narrativa auto-atestada; com eles, é uma narrativa conferível contra o registro que a produziu.
@@ -532,8 +707,8 @@ narrativa auto-atestada; com eles, é uma narrativa conferível contra o registr
 
 | Documento | Entregue | Mínimo exigido |
 | --- | --- | --- |
-| PRD | 11 requisitos funcionais, 10 não funcionais, 11 riscos com probabilidade/impacto/mitigação, 16 critérios de aceitação, 8 itens fora de escopo decidido + 2 na categoria "ninguém perguntou" | 8 RF, 2 riscos, 2 fora de escopo |
-| RFC | 213 linhas, alternativas descartadas com trade-off, 12 questões em aberto, links para os 7 ADRs | 2 alternativas, 2 questões, 2 links |
-| FDD | 7 contratos de endpoint, 10 caminhos de arquivo reais na seção de integração, matriz de erros `WEBHOOK_*`, ledger de 21 propostas sem origem | 4 endpoints, 4 caminhos |
+| PRD | 11 requisitos funcionais, 10 não funcionais, 11 riscos com probabilidade/impacto/mitigação, 16 critérios de aceitação, 8 itens fora de escopo decidido + 2 na categoria "ninguém perguntou", 10 questões abertas com dono + 16 propostas próprias com aprovador e prazo | 8 RF, 2 riscos, 2 fora de escopo |
+| RFC | 225 linhas, 8 alternativas descartadas com trade-off, 15 questões em aberto (12 da reunião + 3 desambiguações feitas fora dela, aguardando ratificação), links para os 7 ADRs | 2 alternativas, 2 questões, 2 links |
+| FDD | 7 contratos de endpoint, 10 caminhos de arquivo reais na seção de integração, matriz de erros `WEBHOOK_*`, registro final com 13 derivações (cada uma com a cadeia até a fonte) e 8 propostas com aprovador nomeado | 4 endpoints, 4 caminhos |
 | ADRs | 7, cobrindo 6 das 6 decisões principais | 5 a 8 arquivos, 5 das 6 decisões |
-| TRACKER | 234 linhas na tabela principal (208 com fonte na transcrição, 88,9%; 26 no código, cobrindo 14 arquivos), 41 itens na tabela de sem origem, zero órfãos na varredura reversa dos 112 itens do índice, 6 achados reportados | 80% de cobertura, 70% transcrição, 5 linhas de código |
+| TRACKER | 234 linhas na tabela principal (208 com fonte na transcrição, 88,9%; 26 no código, cobrindo 14 arquivos), 41 itens acrescentados pelos documentos — 14 derivações com cadeia e 27 propostas com aprovador —, zero órfãos na varredura reversa dos 113 itens do índice, 6 achados **corrigidos e reverificados** | 80% de cobertura, 70% transcrição, 5 linhas de código |

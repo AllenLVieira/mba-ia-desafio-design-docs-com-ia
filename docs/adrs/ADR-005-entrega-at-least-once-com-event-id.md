@@ -66,7 +66,7 @@ Diego posicionou o custo de evitar duplicata: "Garantir exactly-once exigiria co
 
 ## Fontes
 
-**Índice da transcrição:** DEC-08, DEC-10 · RNF-03, RNF-06 · ALT-07 · TEC-02, TEC-04, TEC-05, TEC-06, TEC-07, TEC-08, TEC-09, TEC-17 · notas de leitura (c)-4.
+**Índice da transcrição** — enumeração literal dos IDs citados no corpo deste ADR: DEC-08, DEC-10 · RNF-03, RNF-06, RNF-10 · ALT-07 · TEC-02, TEC-04, TEC-05, TEC-06, TEC-07, TEC-08, TEC-09, TEC-17 · notas de leitura (c)-4.
 
 **Arquivos reais:** `src/middlewares/request-logger.middleware.ts` (precedente de header de correlação `X-Request-Id`), `prisma/schema.prisma` (convenção `uuid` `@db.Char(36)`).
 

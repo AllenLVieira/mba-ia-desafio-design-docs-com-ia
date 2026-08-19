@@ -10,7 +10,7 @@
 
 O time é pequeno (RES-01, Diego `[09:07]`) e o prazo é de três sprints, com a revisão de segurança de Sofia incluída no fim (DEC-13, `[09:47]`), sob pressão comercial da Atlas Comercial (RES-04).
 
-A codebase tem convenção estabelecida e uniforme. Bruno descreveu (COD-11, `[09:27]`): "A gente tem um padrão claro na codebase. Cada domínio é um módulo em src/modules com controller, service, repository, routes e schemas. Webhook vai seguir igual." E sobre erros (COD-04, `[09:29]`): "a gente já tem um padrão. Tem classe AppError, classes específicas tipo InsufficientStockError, InvalidStatusTransitionError."
+A codebase tem convenção estabelecida e uniforme. Bruno descreveu (COD-11, `[09:27]`): "A gente tem um padrão claro na codebase. Cada domínio é um módulo em src/modules com controller, service, repository, routes e schemas. Webhook vai seguir igual." E sobre erros (COD-04, `[09:28]`): "a gente já tem um padrão. Tem classe AppError, classes específicas tipo InsufficientStockError, InvalidStatusTransitionError."
 
 O módulo de webhooks precisa expor os endpoints de configuração pedidos pelo produto — `POST` para cadastro com url, secret gerada pelo sistema, lista de status e customer_id (RF-01); `PATCH` para edição (RF-02); `DELETE` para remoção (RF-03); `GET` para listar os webhooks de um customer (RF-04), com o filtro de status por endpoint (RF-05) — além dos endpoints decididos em [ADR-003](ADR-003-retry-com-backoff-exponencial-e-dead-letter-queue.md) e [ADR-004](ADR-004-assinatura-hmac-sha256-com-secret-por-endpoint.md).
 
@@ -43,7 +43,7 @@ O módulo de webhooks precisa expor os endpoints de configuração pedidos pelo 
 
 1. **Módulo em `src/modules/webhooks`**, com os mesmos cinco arquivos dos demais módulos (DEC-17 / COD-11). O arquivo de lógica do worker, `webhook.worker.ts`, é o sexto — ver [ADR-002](ADR-002-worker-em-processo-separado-com-polling.md).
 
-2. **Códigos de erro com prefixo de domínio** `WEBHOOK_`, replicando o esquema de `INSUFFICIENT_STOCK` e `INVALID_STATUS_TRANSITION` (COD-15 / TEC-16, Bruno `[09:29]`): `WEBHOOK_NOT_FOUND`, `WEBHOOK_INVALID_URL`, `WEBHOOK_SECRET_REQUIRED`, entre outros.
+2. **Códigos de erro com prefixo de domínio** `WEBHOOK_`, replicando o esquema de `INSUFFICIENT_STOCK` e `INVALID_STATUS_TRANSITION` (COD-15 / TEC-16, Bruno `[09:28]`): `WEBHOOK_NOT_FOUND`, `WEBHOOK_INVALID_URL`, `WEBHOOK_SECRET_REQUIRED`, entre outros.
 
 3. **Identificadores UUID** nas novas tabelas, seguindo o resto do projeto (DEC-19, Larissa `[09:51]`: "Tudo é uuid.").
 
@@ -85,7 +85,7 @@ O módulo de webhooks precisa expor os endpoints de configuração pedidos pelo 
 
 ## Fontes
 
-**Índice da transcrição:** DEC-11, DEC-12, DEC-13, DEC-17, DEC-19, DEC-20 · RF-01, RF-02, RF-03, RF-04, RF-05 · RES-01, RES-03, RES-04, RES-07 · ADI-06 · ABE-03 · COD-04, COD-05, COD-06, COD-07, COD-08, COD-09, COD-11, COD-12, COD-15 · TEC-13, TEC-16 · notas de leitura (a) e (c)-1.
+**Índice da transcrição** — enumeração literal dos IDs citados no corpo deste ADR: DEC-03, DEC-09, DEC-11, DEC-12, DEC-13, DEC-14, DEC-17, DEC-19, DEC-20 · RF-01, RF-02, RF-03, RF-04, RF-05 · RES-01, RES-03, RES-04, RES-07 · ADI-06 · ABE-03 · COD-04, COD-05, COD-06, COD-07, COD-08, COD-09, COD-11, COD-12, COD-15 · TEC-16 · notas de leitura (a) e (c)-1.
 
 **Arquivos reais:** `src/shared/errors/app-error.ts` (`AppError`), `src/shared/errors/http-errors.ts` (`NotFoundError`, `ConflictError`, `ValidationError`), `src/shared/errors/index.ts`, `src/middlewares/error.middleware.ts` (`errorMiddleware`), `src/middlewares/auth.middleware.ts` (`authenticate`, `requireRole`, `AuthUser`), `src/middlewares/validate.middleware.ts` (`validate`), `src/shared/logger/index.ts` (`logger`), `src/modules/orders/order.routes.ts` (`buildOrderRouter`), `src/modules/orders/order.schemas.ts` (`createOrderSchema`, `listOrdersQuerySchema`), `src/modules/orders/order.controller.ts`, `src/modules/orders/order.service.ts`, `src/modules/orders/order.repository.ts`, `src/routes/index.ts` (`buildApiRouter`), `src/app.ts` (`buildControllers`, `buildApp`), `src/config/database.ts`, `src/config/env.ts` (`envSchema`), `prisma/schema.prisma`, `tests/setup.ts`, `tests/helpers/factories.ts`.
 

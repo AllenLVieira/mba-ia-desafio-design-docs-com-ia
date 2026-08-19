@@ -70,7 +70,7 @@ O worker de [ADR-002](ADR-002-worker-em-processo-separado-com-polling.md) precis
 
 ## Fontes
 
-**Índice da transcrição:** DEC-05, DEC-06, DEC-07, DEC-12 · RF-06, RF-08, RF-10 · RNF-01, RNF-02, RNF-06 · ALT-04, ALT-05, ALT-06 · ADI-01, ADI-02 · ABE-01, ABE-04 · COD-09 · TEC-12, TEC-22, TEC-23, TEC-24, TEC-25, TEC-28.
+**Índice da transcrição** — enumeração literal dos IDs citados no corpo deste ADR: DEC-05, DEC-06, DEC-07, DEC-12, DEC-15 · RF-06, RF-08, RF-10 · RNF-01, RNF-02, RNF-06 · ALT-04, ALT-05, ALT-06 · ADI-01, ADI-02, ADI-04 · ABE-01, ABE-04 · COD-09 · TEC-01, TEC-12, TEC-22, TEC-23, TEC-24, TEC-25, TEC-28.
 
 **Arquivos reais:** `src/middlewares/auth.middleware.ts` (`requireRole`), `src/routes/index.ts` (`buildApiRouter`), `src/shared/logger/index.ts` (`logger`).
 
